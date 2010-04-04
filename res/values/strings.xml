@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+<string name="app_name">Numbers</string>
+<string name="spinner">Choose a Max Value</string>
+<string name="close">Are you sure you want to close the game?</string>
+<string name="okay">Ok</string>
+<string name="cancel">Cancel</string>
+<string name="error">Error</string>
+<string name="hs_error">There was an error parsing the high scores.</string>
+<string name="reset_hs">Reset High Scores</string>
+<string name="high_score">High Score!</string>
+<string name="name_prompt">Please enter your name:</string>
+<string name="bad_input">Incorrect Input</string>
+</resources>
