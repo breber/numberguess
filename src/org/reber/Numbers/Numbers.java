@@ -50,13 +50,13 @@ public class Numbers extends Activity {
 	//For the progres bar on the logo screen
 	private ProgressBar progress;
 	private Timer time = new Timer();
-	
+
 	//The Handler allows us to send events from the two threads
-	private final Handler mHandler = new Handler();
-	
+	private final Handler handler = new Handler();
+
 	//This is what is "posted" to the handler - the run() method gets
 	//run when the progress bar finishes
-	private final Runnable updateResults = new Runnable() {
+	private final Runnable run = new Runnable() {
 		public void run() {
 			flipView();
 			time.stop();
@@ -100,7 +100,7 @@ public class Numbers extends Activity {
 				}
 				//When the progressbar is finished, we come here and post
 				//to the Handler our Runnable object
-				mHandler.post(updateResults);
+				handler.post(run);
 			}
 		}.start();
 
@@ -181,7 +181,7 @@ public class Numbers extends Activity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			ViewFlipper change = (ViewFlipper) findViewById(R.id.viewFlipper);
 			//If we are in the high scores, we will go back to the game
 			if (change.getCurrentView().getId() == R.id.hsTable)
@@ -204,13 +204,7 @@ public class Numbers extends Activity {
 					}
 				});
 
-				prompt.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-
-					}
-				});
+				prompt.setNegativeButton(R.string.cancel, null);
 				prompt.show();
 				return true;
 			}
@@ -422,7 +416,8 @@ public class Numbers extends Activity {
 			}
 		}
 
-		// If we didn't add it, and the size of the ArrayList is smaller than 10, and the game is over, we will add it
+		// If we didn't add it, and the size of the ArrayList is smaller than 10, 
+		//and the game is over, we will add it
 		if (!added && scores.size() < 10 && game.getFinished())
 		{
 			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses()));			

@@ -10,7 +10,7 @@
 <RelativeLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/logoView">
 <ImageView android:id="@+id/logo" android:scaleType="fitXY" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerInParent="true" android:minHeight="80pt" android:minWidth="80pt" android:src="@drawable/icon"></ImageView>
 <TextView android:id="@+id/TextView01" android:layout_below="@id/logo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number Guessing Game!" android:textSize="10pt" android:layout_centerHorizontal="true"></TextView>
-<ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:layout_centerHorizontal="true" android:layout_height="wrap_content" android:layout_below="@+id/TextView01" android:id="@+id/loading" android:progress="0" android:paddingTop="5px" android:layout_width="fill_parent" android:layout_margin="10px" android:max="10"></ProgressBar>
+<ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:layout_centerHorizontal="true" android:layout_height="wrap_content" android:layout_below="@+id/TextView01" android:id="@+id/loading" android:progress="0" android:paddingTop="5px" android:layout_width="fill_parent" android:layout_margin="10px" android:max="5"></ProgressBar>
 </RelativeLayout>
 <!-- Game View -->
 <RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/gameView">
