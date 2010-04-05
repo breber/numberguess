@@ -1,17 +1,32 @@
 package org.reber.Numbers;
 
 import java.util.ArrayList;
-import android.app.*;
+
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.animation.*;
-import android.widget.*;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 /**
  * A game where the user guesses a number between zero and 1000 (or
@@ -30,8 +45,11 @@ public class Numbers extends Activity {
 
 	private MenuItem hScore;
 
+	//For the progres bar on the logo screen
 	private ProgressBar progress;
-
+	private int mProgressStatus;
+	private Timer time = new Timer();
+	private Handler mHandler = new Handler();
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,18 +57,27 @@ public class Numbers extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = (ProgressBar) findViewById(R.id.loading);
-		progress.setIndeterminate(false);
+		
 		// New numbers game
 		game = new NumbersGame();
-
-		new Thread() {
-			public void run() {
-				try { 
-					// Do some Fake-Work 
-					sleep(5000); 
-				} catch (Exception e) { Toast.makeText(Numbers.this, "Exception", Toast.LENGTH_SHORT).show(); }
-			} 
-		}.start();
+		
+		time.start();
+		new Thread(new Runnable() {
+            public void run() {
+                while (mProgressStatus < progress.getMax()) 
+                {
+                    mProgressStatus = (int)time.getSeconds();
+                    // Update the progress bar
+                    mHandler.post(new Runnable() {
+                        public void run() {
+                            progress.setProgress(mProgressStatus);
+                        }
+                    });
+                }
+                time.stop();
+//                flipView();
+            }
+        }).start();
 
 		// Set the range spinner value to the current range
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
@@ -68,7 +95,8 @@ public class Numbers extends Activity {
 
 			@Override
 			public void onClick(View arg0) {
-				flipView();
+				if (progress.getProgress() == progress.getMax())
+					flipView();
 			}
 		});
 
