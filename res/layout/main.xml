@@ -10,8 +10,8 @@
 <RelativeLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/logoView">
 <ImageView android:id="@+id/logo" android:scaleType="fitXY" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerInParent="true" android:minHeight="80pt" android:minWidth="80pt" android:src="@drawable/icon"></ImageView>
 <TextView android:id="@+id/TextView01" android:layout_below="@id/logo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number Guessing Game!" android:textSize="10pt" android:layout_centerHorizontal="true"></TextView>
+<ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:layout_centerHorizontal="true" android:layout_height="wrap_content" android:layout_below="@+id/TextView01" android:id="@+id/loading" android:progress="0" android:indeterminate="false" android:paddingTop="5px" android:layout_width="fill_parent" android:max="10000" android:layout_margin="10px"></ProgressBar>
 </RelativeLayout>
-
 <!-- Game View -->
 <RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/gameView">
 <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Please enter a number between 1 &amp; 1000." android:layout_marginTop="4pt" android:layout_marginLeft="4pt" android:id="@+id/label"></TextView>
@@ -22,6 +22,7 @@
 <!-- Range Spinner -->
 <Spinner android:layout_below="@id/numGuesses" android:layout_height="wrap_content" android:id="@+id/numSpinner" android:visibility="invisible" android:layout_width="fill_parent" android:prompt="@string/spinner"></Spinner>
 <Button android:layout_below="@id/numSpinner" android:layout_height="wrap_content" android:id="@+id/spinnerButton" android:text="Choose" android:visibility="invisible" android:layout_marginRight="3px" android:layout_width="fill_parent"></Button>
+
 </RelativeLayout>
 
 <!-- High Scores Table -->
