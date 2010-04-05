@@ -1,6 +1,7 @@
 package org.reber.Numbers;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -42,13 +43,25 @@ public class Numbers extends Activity {
 
 	private int keyPressCount = 0;
 
+	//We keep this menuitem so that we can change its label
+	//when the user presses the back button
 	private MenuItem hScore;
 
 	//For the progres bar on the logo screen
 	private ProgressBar progress;
-	private int mProgressStatus;
 	private Timer time = new Timer();
-	private Handler mHandler = new Handler();
+	
+	//The Handler allows us to send events from the two threads
+	private final Handler mHandler = new Handler();
+	
+	//This is what is "posted" to the handler - the run() method gets
+	//run when the progress bar finishes
+	private final Runnable updateResults = new Runnable() {
+		public void run() {
+			flipView();
+			time.stop();
+		}
+	};
 
 	/** Called when the activity is first created. */
 	@Override
@@ -56,27 +69,9 @@ public class Numbers extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		progress = (ProgressBar) findViewById(R.id.loading);
-		
+
 		// New numbers game
 		game = new NumbersGame();
-		
-		time.start();
-		new Thread(new Runnable() {
-            public void run() {
-                while (mProgressStatus < progress.getMax()) 
-                {
-                    mProgressStatus = (int)time.getSeconds();
-                    // Update the progress bar
-                    mHandler.post(new Runnable() {
-                        public void run() {
-                            progress.setProgress(mProgressStatus);
-                        }
-                    });
-                }
-                time.stop();
-//                flipView();
-            }
-        }).start();
 
 		// Set the range spinner value to the current range
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
@@ -88,19 +83,29 @@ public class Numbers extends Activity {
 		hubSpinner.setSelection(position);
 		hubSpinner.setVisibility(View.INVISIBLE);
 
-		ViewFlipper change = (ViewFlipper) findViewById(R.id.viewFlipper);
-
-		change.setOnClickListener(new View.OnClickListener() {
-
+		//Start timing
+		time.start();
+		//Create a new thread to update the progress bar - need
+		//another thread otherwise the UI wouldn't show up until
+		//this has finished running.
+		new Thread() {
 			@Override
-			public void onClick(View arg0) {
-				if (progress.getProgress() == progress.getMax())
-					flipView();
+			public void run() {
+				//While the progressbar isn't finished, we will update
+				//it with the current amount of seconds given by our Timer
+				while (progress.getProgress() < progress.getMax()) 
+				{
+					// Update the progress bar
+					progress.setProgress((int)time.getSeconds());
+				}
+				//When the progressbar is finished, we come here and post
+				//to the Handler our Runnable object
+				mHandler.post(updateResults);
 			}
-		});
+		}.start();
 
+		//Set the action to be completed when we click the Submit button
 		final Button submit = (Button) findViewById(R.id.submit);
-
 		submit.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -109,8 +114,11 @@ public class Numbers extends Activity {
 			}
 		});
 
+		//Set the properties for the EditText (where we type our answers)
 		EditText number = (EditText) findViewById(R.id.guess);
 		number.setOnKeyListener(new OnKeyListener() {
+			//We want to catch the Enter key and override the default action
+			//Overriding action is to simulate pressing "Submit"
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {				
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
