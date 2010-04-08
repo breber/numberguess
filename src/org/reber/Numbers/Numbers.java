@@ -260,8 +260,22 @@ public class Numbers extends Activity {
 		}
 		if (menuTitle.equals("Reset High Scores"))
 		{
-			initScores();
-			printHighScores();
+			//do we really want to clear high scores?
+			AlertDialog.Builder prompt = new AlertDialog.Builder(this);
+
+			prompt.setMessage(R.string.reset_hs_prompt);
+
+			prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					initScores();
+					printHighScores();				
+				}
+			});
+
+			prompt.setNegativeButton(R.string.cancel, null);
+			prompt.show();
 		}
 		return true;
 	}
