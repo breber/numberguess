@@ -97,8 +97,8 @@ public class Numbers extends Activity {
 				{
 					//Try to update
 					try {
-					// Update the progress bar
-					progress.setProgress((int)time.getSeconds());
+						// Update the progress bar
+						progress.setProgress((int) time.getSeconds());
 					} catch (TimingException e) {
 						//If we run into problems, we will automatically
 						//forward them to the game
