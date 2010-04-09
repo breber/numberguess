@@ -30,7 +30,7 @@ import android.widget.ViewFlipper;
 
 /**
  * A game where the user guesses a number between zero and 1000 (or
- * another number that is prespecified). We will then tell them whether
+ * another number that is pre-specified). We will then tell them whether
  * their guess is too high, or too low.
  * 
  * @author brianreber
@@ -43,11 +43,11 @@ public class Numbers extends Activity {
 
 	private int keyPressCount = 0;
 
-	//We keep this menuitem so that we can change its label
+	//We keep this MenuItem so that we can change its label
 	//when the user presses the back button
 	private MenuItem hScore;
 
-	//For the progres bar on the logo screen
+	//For the progress bar on the logo screen
 	private ProgressBar progress;
 	private Timer time = new Timer();
 
@@ -91,14 +91,21 @@ public class Numbers extends Activity {
 		new Thread() {
 			@Override
 			public void run() {
-				//While the progressbar isn't finished, we will update
+				//While the ProgressBar isn't finished, we will update
 				//it with the current amount of seconds given by our Timer
 				while (progress.getProgress() < progress.getMax()) 
 				{
+					//Try to update
+					try {
 					// Update the progress bar
 					progress.setProgress((int)time.getSeconds());
+					} catch (TimingException e) {
+						//If we run into problems, we will automatically
+						//forward them to the game
+						handler.post(run);
+					}
 				}
-				//When the progressbar is finished, we come here and post
+				//When the ProgressBar is finished, we come here and post
 				//to the Handler our Runnable object
 				handler.post(run);
 			}
@@ -212,8 +219,6 @@ public class Numbers extends Activity {
 		return false;
 	}
 
-
-	@Override
 	/**
 	 * Gets called when the menu button is pressed.
 	 * param menu
@@ -221,6 +226,7 @@ public class Numbers extends Activity {
 	 * return
 	 * true so that it uses our own implementation
 	 */
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		ViewFlipper change = (ViewFlipper) findViewById(R.id.viewFlipper);
 
@@ -266,7 +272,6 @@ public class Numbers extends Activity {
 			prompt.setMessage(R.string.reset_hs_prompt);
 
 			prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					initScores();
