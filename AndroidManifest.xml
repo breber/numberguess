@@ -3,7 +3,8 @@
       package="org.reber.Numbers"
       android:versionCode="1" android:versionName="1.2">
     <application android:label="@string/app_name" android:debuggable="true" android:icon="@drawable/icon">
-        <activity android:name=".Numbers"
+         <!-- <activity android:name=".TabbedView"-->
+         <activity android:name=".Numbers"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait">
             <intent-filter>
