@@ -258,7 +258,7 @@ public class Numbers extends Activity {
 		{
 			//Save the MenuItem so we can switch back the label if we press the back button
 			hScore = item;
-			goToHighScores(item);	
+			goToHighScores(item);
 		}
 		if (menuTitle.equals("Range"))
 		{
