@@ -46,7 +46,7 @@ public class TabbedNumbers extends TabActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.highscores);
+	    setContentView(R.layout.tabbed);
 
 	    mTabHost = getTabHost();
 	    mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
