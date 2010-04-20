@@ -3,6 +3,7 @@ package org.reber.Numbers;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -14,11 +15,14 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -27,7 +31,7 @@ import android.widget.TabHost.OnTabChangeListener;
 
 public class TabbedNumbers extends TabActivity {
 	
-	TabHost mTabHost;
+	private TabHost mTabHost;
 	
 	private NumbersGame game;
 
@@ -48,6 +52,23 @@ public class TabbedNumbers extends TabActivity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.tabbed);
 
+	    //Display the logo
+		final Dialog prompt = new Dialog(this);
+		prompt.setTitle("Welcome to Numbers!");
+		ImageView im = new ImageView(this);
+		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));
+		im.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				prompt.dismiss();
+				
+				return false;
+			}
+		});
+		prompt.setContentView(im);
+		prompt.show();
+	    
 	    mTabHost = getTabHost();
 	    mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			
