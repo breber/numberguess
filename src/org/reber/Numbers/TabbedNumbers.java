@@ -147,6 +147,16 @@ public class TabbedNumbers extends TabActivity {
 		EditText answer = (EditText) findViewById(R.id.guess);
 		TextView correction = (TextView) findViewById(R.id.result);
 
+		Button b = (Button) findViewById(R.id.submit);
+		b.setText("Submit");
+		b.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				checkAnswer();
+			}
+		});
+		
 		numGuess.setText("");
 		correction.setText("");
 		answer.setText("");
@@ -350,6 +360,15 @@ public class TabbedNumbers extends TabActivity {
 
 		if (correction.getText().toString().contains("Correct,")) 
 		{
+			Button b = (Button) findViewById(R.id.submit);
+			b.setText("Restart");
+			b.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					TabbedNumbers.this.restart(game.getRange());
+				}
+			});
 			highScores();
 		}
 	}
