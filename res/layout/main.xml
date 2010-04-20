@@ -3,30 +3,28 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-
+<!--
 <ViewFlipper android:id="@+id/viewFlipper" android:layout_height="fill_parent" android:layout_width="fill_parent">
 
-<!-- Logo View -->
 <RelativeLayout android:layout_height="fill_parent" android:layout_width="fill_parent" android:id="@+id/logoView">
 <ImageView android:id="@+id/logo" android:scaleType="fitXY" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_centerInParent="true" android:minHeight="80pt" android:minWidth="80pt" android:src="@drawable/icon"></ImageView>
 <TextView android:id="@+id/TextView01" android:layout_below="@id/logo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number Guessing Game!" android:textSize="10pt" android:layout_centerHorizontal="true"></TextView>
 <ProgressBar style="@android:style/Widget.ProgressBar.Horizontal" android:layout_centerHorizontal="true" android:layout_height="wrap_content" android:layout_below="@+id/TextView01" android:id="@+id/loading" android:progress="0" android:paddingTop="5px" android:layout_width="fill_parent" android:layout_margin="10px" android:max="5"></ProgressBar>
 </RelativeLayout>
-<!-- Game View -->
-<RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/gameView">
+
+<RelativeLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/gameViewTab">
 <TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:text="Please enter a number between 1 &amp; 1000." android:layout_marginTop="4pt" android:layout_marginLeft="4pt" android:id="@+id/label"></TextView>
 <EditText android:layout_height="wrap_content" android:id="@+id/guess" android:maxLines="1" android:lines="1" android:hint="Enter a Number" android:layout_marginTop="15pt" android:layout_marginLeft="4pt" android:layout_width="fill_parent" android:layout_marginRight="4pt" android:inputType="number|phone"></EditText>
 <Button android:layout_height="wrap_content" android:id="@+id/submit" android:text="Submit" android:layout_width="fill_parent" android:layout_below="@+id/guess" android:layout_marginRight="3pt" android:layout_marginLeft="3pt"></Button>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/result" android:layout_marginLeft="4pt" android:layout_below="@+id/submit"></TextView>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="4pt" android:id="@+id/numGuesses" android:layout_below="@+id/result"></TextView>
-<!-- Range Spinner -->
+
 <Spinner android:layout_below="@id/numGuesses" android:layout_height="wrap_content" android:id="@+id/numSpinner" android:visibility="invisible" android:layout_width="fill_parent" android:prompt="@string/spinner"></Spinner>
 <Button android:layout_below="@id/numSpinner" android:layout_height="wrap_content" android:id="@+id/spinnerButton" android:text="Choose" android:visibility="invisible" android:layout_marginRight="3px" android:layout_width="fill_parent"></Button>
 
 </RelativeLayout>
 
-<!-- High Scores Table -->
-<TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/hsTable">
+<TableLayout android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/hsTableTab">
 <TableRow android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/hsRowLabel" android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="High Scores!"></TextView>
 </TableRow><TableRow android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/hsRow1" android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
@@ -50,5 +48,5 @@
 </TableRow>
 </TableLayout>
 
-</ViewFlipper>
+</ViewFlipper>-->
 </LinearLayout>
