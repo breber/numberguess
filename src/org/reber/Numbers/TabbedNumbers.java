@@ -147,15 +147,7 @@ public class TabbedNumbers extends TabActivity {
 		EditText answer = (EditText) findViewById(R.id.guess);
 		TextView correction = (TextView) findViewById(R.id.result);
 
-		Button b = (Button) findViewById(R.id.submit);
-		b.setText("Submit");
-		b.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				checkAnswer();
-			}
-		});
+		//TODO Figure out why restart button isn't working
 		
 		numGuess.setText("");
 		correction.setText("");
@@ -360,16 +352,17 @@ public class TabbedNumbers extends TabActivity {
 
 		if (correction.getText().toString().contains("Correct,")) 
 		{
-			Button b = (Button) findViewById(R.id.submit);
-			b.setText("Restart");
-			b.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					TabbedNumbers.this.restart(game.getRange());
-				}
-			});
 			highScores();
+//			final Button submit = (Button) findViewById(R.id.submit);
+//			submit.setText("Restart");
+//			submit.setOnTouchListener(new View.OnTouchListener() {
+//				
+//				@Override
+//				public boolean onTouch(View v, MotionEvent event) {
+//					restart(game.getRange());
+//					return false;
+//				}
+//			});
 		}
 	}
 
