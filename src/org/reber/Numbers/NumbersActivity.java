@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.animation.RotateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +62,10 @@ public class NumbersActivity extends TabActivity {
 		prompt.setTitle("Welcome to Numbers!");
 		ImageView im = new ImageView(this);
 		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));
+		RotateAnimation animate = new RotateAnimation(0, 360, 95, 75);
+		animate.setDuration(4000);
+		im.startAnimation(animate);
+		
 		prompt.setContentView(im);	
 		
 		//The Handler allows us to send events from the two threads
