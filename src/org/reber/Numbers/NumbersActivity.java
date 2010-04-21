@@ -29,21 +29,22 @@ import android.widget.TabHost.OnTabChangeListener;
 
 public class NumbersActivity extends TabActivity {
 	
-	private TabHost mTabHost;
-	
 	private NumbersGame game;
-
 	private ArrayList<Score> scores = new ArrayList<Score>();
 	
 	private int keyPressCount = 0;
-	
+
+	//Tab info - used for standard naming
 	private static final int GAME_VIEW_TAB = 0;
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
 	
+	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
-	
+
+	// UI Elements
+	private TabHost mTabHost;
 	private Button submit;
 	private EditText answer;
 	private TextView hiLow;
