@@ -10,15 +10,13 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 
-public class TabbedNumbers extends TabActivity {
+public class NumbersActivity extends TabActivity {
 	
 	private TabHost mTabHost;
 	
@@ -46,6 +44,11 @@ public class TabbedNumbers extends TabActivity {
 	
 	private boolean menuOption = true;
 	
+	private Button submit;
+	private EditText answer;
+	private TextView hiLow;
+	private TextView numGuesses;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,17 +60,30 @@ public class TabbedNumbers extends TabActivity {
 		prompt.setTitle("Welcome to Numbers!");
 		ImageView im = new ImageView(this);
 		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));
-		im.setOnTouchListener(new OnTouchListener() {
-			
+		prompt.setContentView(im);	
+		
+		//The Handler allows us to send events from the two threads
+		final Handler handler = new Handler();
+		//Create a thread to wait for a few seconds, then we can dismiss the prompt
+		new Thread() {
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				prompt.dismiss();
-				
-				return false;
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						prompt.dismiss();
+					}
+				});
 			}
-		});
-		prompt.setContentView(im);
+		}.start();
 		prompt.show();
+
 	    
 	    mTabHost = getTabHost();
 	    mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
@@ -98,19 +114,20 @@ public class TabbedNumbers extends TabActivity {
 		hubSpinner.setSelection(position);
 		hubSpinner.setVisibility(View.INVISIBLE);
 		
-		//Set the action to be completed when we click the Submit button
-		final Button submit = (Button) findViewById(R.id.submit);
+	    submit = (Button) findViewById(R.id.submit);
 		submit.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				checkAnswer();
 			}
 		});
-
+		
+		hiLow = (TextView) findViewById(R.id.result);
+		numGuesses = (TextView) findViewById(R.id.numGuesses);
+		
 		//Set the properties for the EditText (where we type our answers)
-		EditText number = (EditText) findViewById(R.id.guess);
-		number.setOnKeyListener(new OnKeyListener() {
+		answer = (EditText) findViewById(R.id.guess);
+		answer.setOnKeyListener(new OnKeyListener() {
 			//We want to catch the Enter key and override the default action
 			//Overriding action is to simulate pressing "Submit"
 			@Override
@@ -143,14 +160,17 @@ public class TabbedNumbers extends TabActivity {
 	{
 		game = new NumbersGame(range);
 
-		TextView numGuess = (TextView) findViewById(R.id.numGuesses);
-		EditText answer = (EditText) findViewById(R.id.guess);
-		TextView correction = (TextView) findViewById(R.id.result);
+		submit.setText("Submit");
+		submit.setOnClickListener(new View.OnClickListener() {
 
-		//TODO Figure out why restart button isn't working
+			@Override
+			public void onClick(View arg0) {
+				checkAnswer();
+			}
+		});
 		
-		numGuess.setText("");
-		correction.setText("");
+		numGuesses.setText("");
+		hiLow.setText("");
 		answer.setText("");
 	}
 	
@@ -233,7 +253,7 @@ public class TabbedNumbers extends TabActivity {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						TabbedNumbers.this.finish();
+						NumbersActivity.this.finish();
 					}
 				});
 
@@ -284,10 +304,8 @@ public class TabbedNumbers extends TabActivity {
 		hubSpinner.setVisibility(View.VISIBLE);
 
 		// Disable the other fields
-		Button submit = (Button) findViewById(R.id.submit);
-		EditText number = (EditText) findViewById(R.id.guess);
 		submit.setEnabled(false);
-		number.setEnabled(false);
+		answer.setEnabled(false);
 
 		Button submit1 = (Button) findViewById(R.id.spinnerButton);
 		submit1.setVisibility(View.VISIBLE);
@@ -301,15 +319,13 @@ public class TabbedNumbers extends TabActivity {
 				game.setRange(Integer.parseInt(str));
 
 				TextView label = (TextView) findViewById(R.id.label);
-				label.setText("Please enter a number between 1 & "+game.getRange()+".");
+				label.setText("Please enter a number between 1 & " + game.getRange() + ".");
 				hubSpinner.setVisibility(View.INVISIBLE);
 				Button submit1 = (Button) findViewById(R.id.spinnerButton);
 				submit1.setVisibility(View.INVISIBLE);
 
 				// Reenable the other UI elements
-				Button submit = (Button) findViewById(R.id.submit);
-				EditText number = (EditText) findViewById(R.id.guess);
-				number.setEnabled(true);
+				answer.setEnabled(true);
 				submit.setEnabled(true);
 
 				restart(game.getRange());
@@ -327,42 +343,41 @@ public class TabbedNumbers extends TabActivity {
 		if (keyPressCount >= 1)
 			return;
 
-		EditText answer = (EditText) findViewById(R.id.guess);
-		TextView correction = (TextView) findViewById(R.id.result);
-		TextView numGuess = (TextView) findViewById(R.id.numGuesses);
-		Editable userResponse;
 		int response;
 
 		try {
-			userResponse = answer.getText();
-			response = Integer.parseInt(userResponse.toString());
-			correction.setText(game.checkAnswer(response)); 
+			response = Integer.parseInt(answer.getText().toString());
+			hiLow.setText(game.checkAnswer(response)); 
 
 		} catch (OutOfBoundsException e){
-			Toast.makeText(TabbedNumbers.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 			return;
 		} catch (Exception e) {
-			Toast.makeText(TabbedNumbers.this, R.string.bad_input, Toast.LENGTH_SHORT).show();
+			Toast.makeText(NumbersActivity.this, R.string.bad_input, Toast.LENGTH_SHORT).show();
 			return;
 		} finally {
 			answer.setText("");
 		}
 
-		numGuess.setText("You have guessed " + game.getNumGuesses() + " times.");
+		numGuesses.setText("You have guessed " + game.getNumGuesses() + " times.");
 
-		if (correction.getText().toString().contains("Correct,")) 
+		if (hiLow.getText().toString().contains("Correct,")) 
 		{
+			submit.setText("Restart");
+			submit.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					//Again, we have the problem of being called twice...
+					if (keyPressCount >= 1)
+					{
+						keyPressCount = -1;
+						return;
+					}
+					restart(game.getRange());
+				}
+			});
 			highScores();
-//			final Button submit = (Button) findViewById(R.id.submit);
-//			submit.setText("Restart");
-//			submit.setOnTouchListener(new View.OnTouchListener() {
-//				
-//				@Override
-//				public boolean onTouch(View v, MotionEvent event) {
-//					restart(game.getRange());
-//					return false;
-//				}
-//			});
 		}
 	}
 
