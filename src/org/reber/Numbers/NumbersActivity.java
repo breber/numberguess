@@ -11,6 +11,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,9 +108,15 @@ public class NumbersActivity extends TabActivity {
 	    
 	    mTabHost.setCurrentTab(GAME_VIEW_TAB);
 
-		// New numbers game
-		game = new NumbersGame();
+	    
+		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
 
+		// New numbers game
+		game = new NumbersGame(Integer.parseInt(pref.getString("Range", 1000 + "")));
+
+		TextView label = (TextView) findViewById(R.id.label);
+		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
+		
 		// Set the range spinner value to the current range
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
@@ -297,6 +304,10 @@ public class NumbersActivity extends TabActivity {
 	 */
 	private void setRange()
 	{
+		//Get the screen dimensions so we can set the buttons to fill half the screen
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		
 		// Get the spinner
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
 		// Get the options from the limits.xml file
@@ -314,6 +325,7 @@ public class NumbersActivity extends TabActivity {
 		answer.setEnabled(false);
 
 		Button submit1 = (Button) findViewById(R.id.spinnerButton);
+		submit1.setWidth((dm.widthPixels - 3) / 2);
 		submit1.setVisibility(View.VISIBLE);
 
 		submit1.setOnClickListener(new View.OnClickListener() {
@@ -329,6 +341,9 @@ public class NumbersActivity extends TabActivity {
 				hubSpinner.setVisibility(View.INVISIBLE);
 				Button submit1 = (Button) findViewById(R.id.spinnerButton);
 				submit1.setVisibility(View.INVISIBLE);
+				
+				Button setAsDefault = (Button) findViewById(R.id.setDefault);
+				setAsDefault.setVisibility(View.INVISIBLE);
 
 				// Reenable the other UI elements
 				answer.setEnabled(true);
@@ -337,6 +352,30 @@ public class NumbersActivity extends TabActivity {
 				restart(game.getRange());
 			}
 		});
+		
+		Button setAsDefault = (Button) findViewById(R.id.setDefault);
+		setAsDefault.setWidth((dm.widthPixels - 3) / 2);
+		setAsDefault.setVisibility(View.VISIBLE);
+		
+		setAsDefault.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
+
+				Editor edit = pref.edit();
+				
+				Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
+				String str = (String)hubSpinner.getSelectedItem();
+								
+				if (pref.contains("Range"))
+					edit.remove("Range");
+				
+				edit.putString("Range", Integer.parseInt(str) + "");
+				edit.commit();
+				
+				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();
+		}});
 	}
 
 	/**

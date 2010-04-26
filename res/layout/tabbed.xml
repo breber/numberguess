@@ -37,7 +37,11 @@
 				<Button android:layout_below="@id/numSpinner"
 					android:layout_height="wrap_content" android:id="@+id/spinnerButton"
 					android:text="Choose" android:visibility="invisible"
-					android:layout_marginRight="3px" android:layout_width="fill_parent"></Button>
+					android:layout_marginRight="3px" android:layout_width="wrap_content" android:layout_toLeftOf="@+id/setDefault" android:layout_alignParentRight="true"></Button>
+				<Button android:layout_below="@id/numSpinner"
+					android:layout_height="wrap_content" android:id="@+id/setDefault"
+					android:text="Set Default" android:visibility="invisible"
+					android:layout_marginRight="3px" android:layout_width="wrap_content" android:layout_toRightOf="@+id/spinnerButton" android:layout_alignParentLeft="true"></Button>
 			</RelativeLayout>
 
 			<TableLayout android:layout_width="fill_parent"
