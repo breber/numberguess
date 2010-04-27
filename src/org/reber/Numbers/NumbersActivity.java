@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
@@ -17,8 +18,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnKeyListener;
-import android.view.animation.RotateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,10 +32,10 @@ import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 
 public class NumbersActivity extends TabActivity {
-	
+
 	private NumbersGame game;
 	private ArrayList<Score> scores = new ArrayList<Score>();
-	
+
 	private int keyPressCount = 0;
 
 	//Tab info - used for standard naming
@@ -41,7 +43,7 @@ public class NumbersActivity extends TabActivity {
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
-	
+
 	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
 
@@ -51,64 +53,78 @@ public class NumbersActivity extends TabActivity {
 	private EditText answer;
 	private TextView hiLow;
 	private TextView numGuesses;
-	
+
+	private boolean firstTimeIn = true;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.tabbed);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.tabbed);
 
-	    //Display the logo
-		final Dialog prompt = new Dialog(this);
-		prompt.setTitle("Welcome to Numbers!");
-		ImageView im = new ImageView(this);
-		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));
-		RotateAnimation animate = new RotateAnimation(0, 360, 95, 75);
-		animate.setDuration(4000);
-		im.startAnimation(animate);
-		
-		prompt.setContentView(im);	
-		
-		//The Handler allows us to send events from the two threads
-		final Handler handler = new Handler();
-		//Create a thread to wait for a few seconds, then we can dismiss the prompt
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+		if (firstTimeIn) {
+			//Display the logo
+			final Dialog prompt = new Dialog(this);
+			prompt.setTitle("Welcome to Numbers!");
+			ImageView im = new ImageView(this);
+			im.setImageDrawable(getResources().getDrawable(R.drawable.icon));		
+			prompt.setContentView(im);	
 
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-						prompt.dismiss();
+			//The Handler allows us to send events from the two threads
+			final Handler handler = new Handler();
+			//Create a thread to wait for a few seconds, then we can dismiss the prompt
+			new Thread() {
+				@Override
+				public void run() {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
 					}
-				});
-			}
-		}.start();
-		prompt.show();
 
-	    
-	    mTabHost = getTabHost();
-	    mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
-			
+					handler.post(new Runnable() {
+						@Override
+						public void run() {
+							prompt.dismiss();
+						}
+					});
+				}
+			}.start();
+			prompt.show();
+			firstTimeIn = false;
+		}
+		//Set up the tab view
+		mTabHost = getTabHost();
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
 			@Override
 			public void onTabChanged(String tabId) {
 				if (tabId.equals("hsTab"))
 					menuOption = false;
 				else menuOption = true;
-				
+
 			}
 		});
-	    mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game",getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
-	    mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores",getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
-	    
-	    mTabHost.setCurrentTab(GAME_VIEW_TAB);
+		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game", 
+				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
+		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
+				getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
 
-	    
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener()
+		{
+			public void onTabChanged(String tabId)
+			{
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
+			}
+		});
+		
+		//Hide the keyboard until the user presses on the text box
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
+		mTabHost.setCurrentTab(GAME_VIEW_TAB);
+
+		//Get the preference file (to get the user specified range)
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
 
 		// New numbers game
@@ -116,28 +132,28 @@ public class NumbersActivity extends TabActivity {
 
 		TextView label = (TextView) findViewById(R.id.label);
 		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-		
+
 		// Set the range spinner value to the current range
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
 		int position = adapter.getPosition(String.valueOf(game.getRange()));
 		hubSpinner.setAdapter(adapter);
 		hubSpinner.setSelection(position);
 		hubSpinner.setVisibility(View.INVISIBLE);
-		
-	    submit = (Button) findViewById(R.id.submit);
+
+		//Set the submit button's action
+		submit = (Button) findViewById(R.id.submit);
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				checkAnswer();
 			}
 		});
-		
+
 		hiLow = (TextView) findViewById(R.id.result);
 		numGuesses = (TextView) findViewById(R.id.numGuesses);
-		
+
 		//Set the properties for the EditText (where we type our answers)
 		answer = (EditText) findViewById(R.id.guess);
 		answer.setOnKeyListener(new OnKeyListener() {
@@ -161,18 +177,21 @@ public class NumbersActivity extends TabActivity {
 				}
 			}			
 		});
+		
 		initScoresList();
 
 		highScores();
 	}
-	
+
 	/**
 	 * Restarts the game.  Resets the UI and makes a new random number.
 	 */
 	private void restart(int range)
 	{
+		//Create a new numbers game
 		game = new NumbersGame(range);
 
+		//Reset the submit button (because it is changed to a restart button once the user wins)
 		submit.setText("Submit");
 		submit.setOnClickListener(new View.OnClickListener() {
 
@@ -181,12 +200,12 @@ public class NumbersActivity extends TabActivity {
 				checkAnswer();
 			}
 		});
-		
+
 		numGuesses.setText("");
 		hiLow.setText("");
 		answer.setText("");
 	}
-	
+
 	/**
 	 * Gets called when the menu button is pressed.
 	 * param menu
@@ -197,13 +216,19 @@ public class NumbersActivity extends TabActivity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.gamemenu, menu);
 
 		return true;
 	}
-	
+
+	/**
+	 * Gets called right before the menu is popped up.
+	 * Set the title of the menu item (High Scores or Back to Game)
+	 * depending on what tab we are currently on.
+	 */
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.getItem(1).setTitle(menuOption ? "High Scores":"Back to Game");
 
@@ -247,7 +272,7 @@ public class NumbersActivity extends TabActivity {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -307,7 +332,7 @@ public class NumbersActivity extends TabActivity {
 		//Get the screen dimensions so we can set the buttons to fill half the screen
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		
+
 		// Get the spinner
 		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
 		// Get the options from the limits.xml file
@@ -341,7 +366,7 @@ public class NumbersActivity extends TabActivity {
 				hubSpinner.setVisibility(View.INVISIBLE);
 				Button submit1 = (Button) findViewById(R.id.spinnerButton);
 				submit1.setVisibility(View.INVISIBLE);
-				
+
 				Button setAsDefault = (Button) findViewById(R.id.setDefault);
 				setAsDefault.setVisibility(View.INVISIBLE);
 
@@ -352,30 +377,30 @@ public class NumbersActivity extends TabActivity {
 				restart(game.getRange());
 			}
 		});
-		
+
 		Button setAsDefault = (Button) findViewById(R.id.setDefault);
 		setAsDefault.setWidth((dm.widthPixels - 3) / 2);
 		setAsDefault.setVisibility(View.VISIBLE);
-		
+
 		setAsDefault.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
 
 				Editor edit = pref.edit();
-				
+
 				Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
 				String str = (String)hubSpinner.getSelectedItem();
-								
+
 				if (pref.contains("Range"))
 					edit.remove("Range");
-				
+
 				edit.putString("Range", Integer.parseInt(str) + "");
 				edit.commit();
-				
+
 				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();
-		}});
+			}});
 	}
 
 	/**
@@ -601,5 +626,5 @@ public class NumbersActivity extends TabActivity {
 			i++;
 		}
 	}
-	
+
 }

@@ -8,121 +8,130 @@
 			android:layout_width="fill_parent" android:layout_height="wrap_content" />
 		<FrameLayout android:id="@android:id/tabcontent"
 			android:layout_width="fill_parent" android:layout_height="fill_parent">
-			<RelativeLayout android:layout_height="wrap_content"
-				android:layout_width="fill_parent" android:id="@+id/gameViewTab">
-				<TextView android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:text="Please enter a number between 1 &amp; 1000."
-					android:layout_marginTop="4pt" android:layout_marginLeft="4pt"
-					android:id="@+id/label"></TextView>
-				<EditText android:layout_height="wrap_content" android:id="@+id/guess"
-					android:maxLines="1" android:lines="1" android:hint="Enter a Number"
-					android:layout_marginTop="15pt" android:layout_marginLeft="4pt"
-					android:layout_width="fill_parent" android:layout_marginRight="4pt"
-					android:inputType="number|phone"></EditText>
-				<Button android:layout_height="wrap_content" android:id="@+id/submit"
-					android:text="Submit" android:layout_width="fill_parent"
-					android:layout_below="@+id/guess" android:layout_marginRight="3pt"
-					android:layout_marginLeft="3pt"></Button>
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:id="@+id/result"
-					android:layout_marginLeft="4pt" android:layout_below="@+id/submit"></TextView>
-				<TextView android:layout_width="wrap_content"
-					android:layout_height="wrap_content" android:layout_marginLeft="4pt"
-					android:id="@+id/numGuesses" android:layout_below="@+id/result"></TextView>
-				<!-- Range Spinner -->
-				<Spinner android:layout_below="@id/numGuesses"
-					android:layout_height="wrap_content" android:id="@+id/numSpinner"
-					android:visibility="invisible" android:layout_width="fill_parent"
-					android:prompt="@string/spinner"></Spinner>
-				<Button android:layout_below="@id/numSpinner"
-					android:layout_height="wrap_content" android:id="@+id/spinnerButton"
-					android:text="Choose" android:visibility="invisible"
-					android:layout_marginRight="3px" android:layout_width="wrap_content" android:layout_toLeftOf="@+id/setDefault" android:layout_alignParentRight="true"></Button>
-				<Button android:layout_below="@id/numSpinner"
-					android:layout_height="wrap_content" android:id="@+id/setDefault"
-					android:text="Set Default" android:visibility="invisible"
-					android:layout_marginRight="3px" android:layout_width="wrap_content" android:layout_toRightOf="@+id/spinnerButton" android:layout_alignParentLeft="true"></Button>
-			</RelativeLayout>
-
-			<TableLayout android:layout_width="fill_parent"
-				android:layout_height="fill_parent" android:id="@+id/hsTableTab">
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRowLabel"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+			<ScrollView android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<RelativeLayout android:layout_height="wrap_content"
+					android:layout_width="fill_parent" android:id="@+id/gameViewTab">
+					<TextView android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:text="Please enter a number between 1 &amp; 1000."
+						android:layout_marginTop="4pt" android:layout_marginLeft="4pt"
+						android:id="@+id/label"></TextView>
+					<EditText android:layout_height="wrap_content" android:id="@+id/guess"
+						android:maxLines="1" android:lines="1" android:hint="Enter a Number"
+						android:layout_marginTop="15pt" android:layout_marginLeft="4pt"
+						android:layout_width="fill_parent" android:layout_marginRight="4pt"
+						android:inputType="number|phone"></EditText>
+					<Button android:layout_height="wrap_content" android:id="@+id/submit"
+						android:text="Submit" android:layout_width="fill_parent"
+						android:layout_below="@+id/guess" android:layout_marginRight="3pt"
+						android:layout_marginLeft="3pt"></Button>
 					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:text="High Scores!"></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow1"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						android:layout_height="wrap_content" android:id="@+id/result"
+						android:layout_marginLeft="4pt" android:layout_below="@+id/submit"></TextView>
 					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText1"
-						android:text="1."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow2"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText2"
-						android:text="2."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow3"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText3"
-						android:text="3."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow4"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText4"
-						android:text="4."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow5"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText5"
-						android:text="5."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow6"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText6"
-						android:text="6."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow7"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText7"
-						android:text="7."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow8"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText8"
-						android:text="8."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:id="@+id/hsRow9"
-					android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText9"
-						android:text="9."></TextView>
-				</TableRow>
-				<TableRow android:layout_height="wrap_content"
-					android:layout_width="fill_parent" android:layout_marginLeft="3pt"
-					android:layout_marginTop="4pt" android:id="@+id/hsRow10">
-					<TextView android:layout_width="wrap_content"
-						android:layout_height="wrap_content" android:id="@+id/hsText10"
-						android:text="10."></TextView>
-				</TableRow>
-			</TableLayout>
+						android:layout_height="wrap_content" android:layout_marginLeft="4pt"
+						android:id="@+id/numGuesses" android:layout_below="@+id/result"></TextView>
+					<!-- Range Spinner -->
+					<Spinner android:layout_below="@id/numGuesses"
+						android:layout_height="wrap_content" android:id="@+id/numSpinner"
+						android:visibility="invisible" android:layout_width="fill_parent"
+						android:prompt="@string/spinner"></Spinner>
+					<Button android:layout_below="@id/numSpinner"
+						android:layout_height="wrap_content" android:id="@+id/spinnerButton"
+						android:text="Choose" android:visibility="invisible"
+						android:layout_marginRight="3px" android:layout_width="wrap_content"
+						android:layout_toLeftOf="@+id/setDefault"
+						android:layout_alignParentRight="true"></Button>
+					<Button android:layout_below="@id/numSpinner"
+						android:layout_height="wrap_content" android:id="@+id/setDefault"
+						android:text="Set Default" android:visibility="invisible"
+						android:layout_marginRight="3px" android:layout_width="wrap_content"
+						android:layout_toRightOf="@+id/spinnerButton"
+						android:layout_alignParentLeft="true"></Button>
+				</RelativeLayout>
+			</ScrollView>
+			<ScrollView android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<TableLayout android:layout_width="fill_parent"
+					android:layout_height="fill_parent" android:id="@+id/hsTableTab">
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRowLabel"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:text="High Scores!"></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow1"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText1"
+							android:text="1."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow2"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText2"
+							android:text="2."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow3"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText3"
+							android:text="3."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow4"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText4"
+							android:text="4."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow5"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText5"
+							android:text="5."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow6"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText6"
+							android:text="6."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow7"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText7"
+							android:text="7."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow8"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText8"
+							android:text="8."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:id="@+id/hsRow9"
+						android:layout_marginLeft="3pt" android:layout_marginTop="4pt">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText9"
+							android:text="9."></TextView>
+					</TableRow>
+					<TableRow android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:layout_marginLeft="3pt"
+						android:layout_marginTop="4pt" android:id="@+id/hsRow10">
+						<TextView android:layout_width="wrap_content"
+							android:layout_height="wrap_content" android:id="@+id/hsText10"
+							android:text="10."></TextView>
+					</TableRow>
+				</TableLayout>
+			</ScrollView>
 		</FrameLayout>
 	</LinearLayout>
 </TabHost>
