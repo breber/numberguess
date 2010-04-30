@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -93,36 +94,9 @@ public class NumbersActivity extends TabActivity {
 			prompt.show();
 			firstTimeIn = false;
 		}
-		//Set up the tab view
-		mTabHost = getTabHost();
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
-			@Override
-			public void onTabChanged(String tabId) {
-				if (tabId.equals("hsTab"))
-					menuOption = false;
-				else menuOption = true;
-
-			}
-		});
-		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game", 
-				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
-		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
-				getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
-
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener()
-		{
-			public void onTabChanged(String tabId)
-			{
-				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
-			}
-		});
-		
-		//Hide the keyboard until the user presses on the text box
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
-		mTabHost.setCurrentTab(GAME_VIEW_TAB);
+		//Set up tabs
+		createTabs();
 
 		//Get the preference file (to get the user specified range)
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
@@ -177,10 +151,59 @@ public class NumbersActivity extends TabActivity {
 				}
 			}			
 		});
-		
+
 		initScoresList();
 
 		highScores();
+	}
+	
+	/**
+	 * Override this method for when the orientation changes - otherwise we would continue
+	 * showing the logo popup each time the orientation changed.
+	 */
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		setContentView(R.layout.tabbed);
+
+		createTabs();
+	}
+	
+	/**
+	 * Set up the tabbed view
+	 */
+	private void createTabs()
+	{
+		//Set up the tab view
+		mTabHost = getTabHost();
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+			@Override
+			public void onTabChanged(String tabId) {
+				if (tabId.equals("hsTab"))
+					menuOption = false;
+				else menuOption = true;
+
+			}
+		});
+		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game", 
+				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
+		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
+				getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
+
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener()
+		{
+			public void onTabChanged(String tabId)
+			{
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
+			}
+		});
+
+		//Hide the keyboard until the user presses on the text box
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+		mTabHost.setCurrentTab(GAME_VIEW_TAB);
 	}
 
 	/**
