@@ -44,6 +44,7 @@ public class NumbersActivity extends TabActivity {
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
+	private int currentTab;
 
 	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
@@ -204,6 +205,7 @@ public class NumbersActivity extends TabActivity {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
 		mTabHost.setCurrentTab(GAME_VIEW_TAB);
+		currentTab = 0;
 	}
 
 	/**
