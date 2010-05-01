@@ -347,12 +347,14 @@ public class NumbersActivity extends TabActivity {
 	{
 		//Get the screen dimensions so we can set the buttons to fill half the screen
 		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
 
+		int btnWidth = (int) ((dm.widthPixels - (dm.widthPixels * .1)) / 2);
+		
 		final Dialog dlg = new Dialog(this);
 		dlg.setContentView(R.layout.rangelayout);
-		dlg.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
 		dlg.setTitle("Please Select a Range");
-
+		
 		// Get the spinner
 		Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
 		// Get the options from the limits.xml file
@@ -363,15 +365,13 @@ public class NumbersActivity extends TabActivity {
 		hubSpinner.setAdapter(adapter);
 		// Set the current selected option
 		hubSpinner.setSelection(pos);
-		hubSpinner.setPadding(2, 0, 2, 0);
 
 		// Disable the other fields
 		submit.setEnabled(false);
 		answer.setEnabled(false);
 
 		Button submit1 = (Button) dlg.findViewById(R.id.spinnerButton);
-		submit1.setWidth((dm.widthPixels - 20) / 2);
-		submit1.setPadding(2, 0, 2, 0);
+		submit1.setWidth(btnWidth);
 		submit1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -389,12 +389,10 @@ public class NumbersActivity extends TabActivity {
 				restart(game.getRange());
 			}
 		});
-		
-		Button setAsDefault = (Button) dlg.findViewById(R.id.setDefault);
-		setAsDefault.setWidth((dm.widthPixels - 20) / 2);
-		setAsDefault.setPadding(2, 0, 2, 0);
-		setAsDefault.setOnClickListener(new View.OnClickListener() {
 
+		Button setAsDefault = (Button) dlg.findViewById(R.id.setDefault);
+		setAsDefault.setWidth(btnWidth);
+		setAsDefault.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
