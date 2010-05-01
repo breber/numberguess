@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -43,7 +42,6 @@ public class NumbersActivity extends TabActivity {
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
-	private static int currentTab = -1;
 
 	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
@@ -91,7 +89,7 @@ public class NumbersActivity extends TabActivity {
 			prompt.show();
 
 		//Set up tabs
-		createTabs(currentTab);
+		createTabs();
 
 		//Get the preference file (to get the user specified range)
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
@@ -144,34 +142,13 @@ public class NumbersActivity extends TabActivity {
 	}
 	
 	/**
-	 * Override this method for when the orientation changes - otherwise we would continue
-	 * showing the logo popup each time the orientation changed.
-	 */
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		setContentView(R.layout.tabbed);
-
-		createTabs(currentTab);
-	}
-	
-	/**
 	 * Set up the tabbed view
 	 */
-	private void createTabs(int currentTab)
+	private void createTabs()
 	{
 		//Set up the tab view
 		mTabHost = getTabHost();
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
-			@Override
-			public void onTabChanged(String tabId) {
-				if (tabId.equals("hsTab"))
-					menuOption = false;
-				else menuOption = true;
-
-			}
-		});
 		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game", 
 				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
 		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
@@ -181,6 +158,10 @@ public class NumbersActivity extends TabActivity {
 		{
 			public void onTabChanged(String tabId)
 			{
+				if (tabId.equals("hsTab"))
+					menuOption = false;
+				else menuOption = true;
+				
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
 			}
@@ -188,12 +169,8 @@ public class NumbersActivity extends TabActivity {
 
 		//Hide the keyboard until the user presses on the text box
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-//		if (currentTab == -1)
-//			currentTab = GAME_VIEW_TAB;
 		
-		mTabHost.setCurrentTab(currentTab);
-		currentTab = mTabHost.getCurrentTab();
+		mTabHost.setCurrentTab(GAME_VIEW_TAB);
 	}
 
 	/**
@@ -325,14 +302,12 @@ public class NumbersActivity extends TabActivity {
 		if (!menuOption)
 		{
 			mTabHost.setCurrentTab(GAME_VIEW_TAB);
-			currentTab = GAME_VIEW_TAB;
 			restart(game.getRange());
 			menuOption = true;
 		}
 		else if (menuOption)
 		{
 			mTabHost.setCurrentTab(HS_VIEW_TAB);
-			currentTab = HS_VIEW_TAB;
 			menuOption = false;
 		}
 	}

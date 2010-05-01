@@ -3,7 +3,7 @@
 <string name="app_name">Numbers</string>
 <string name="spinner">Choose a Max Value</string>
 <string name="close">Are you sure you want to close the game?</string>
-<string name="okay">Ok</string>
+<string name="okay">OK</string>
 <string name="cancel">Cancel</string>
 <string name="error">Error</string>
 <string name="hs_error">There was an error parsing the high scores.</string>
