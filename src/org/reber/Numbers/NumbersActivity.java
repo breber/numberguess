@@ -13,7 +13,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -345,18 +344,11 @@ public class NumbersActivity extends TabActivity {
 	 */
 	private void setRange()
 	{
-		//Get the screen dimensions so we can set the buttons to fill half the screen
-		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-		int btnWidth = (int) ((dm.widthPixels - (dm.widthPixels * .1)) / 2);
-		
-		final Dialog dlg = new Dialog(this);
-		dlg.setContentView(R.layout.rangelayout);
+		final AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle("Please Select a Range");
 		
-		// Get the spinner
-		Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
+		// Create the spinner
+		final Spinner hubSpinner = new Spinner(this);
 		// Get the options from the limits.xml file
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -365,17 +357,16 @@ public class NumbersActivity extends TabActivity {
 		hubSpinner.setAdapter(adapter);
 		// Set the current selected option
 		hubSpinner.setSelection(pos);
-
+		
+		dlg.setView(hubSpinner);
+		
 		// Disable the other fields
 		submit.setEnabled(false);
 		answer.setEnabled(false);
-
-		Button submit1 = (Button) dlg.findViewById(R.id.spinnerButton);
-		submit1.setWidth(btnWidth);
-		submit1.setOnClickListener(new View.OnClickListener() {
+		
+		dlg.setPositiveButton("Choose", new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
-				Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
+			public void onClick(DialogInterface dialog, int which) {
 				String str = (String)hubSpinner.getSelectedItem();
 				game.setRange(Integer.parseInt(str));
 
@@ -385,21 +376,18 @@ public class NumbersActivity extends TabActivity {
 				// Reenable the other UI elements
 				answer.setEnabled(true);
 				submit.setEnabled(true);
-				dlg.dismiss();
-				restart(game.getRange());
+				restart(game.getRange());				
 			}
 		});
 
-		Button setAsDefault = (Button) dlg.findViewById(R.id.setDefault);
-		setAsDefault.setWidth(btnWidth);
-		setAsDefault.setOnClickListener(new View.OnClickListener() {
+		dlg.setNeutralButton("Set Default", new OnClickListener() {
+			
 			@Override
-			public void onClick(View v) {
+			public void onClick(DialogInterface dialog, int which) {
 				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
 
 				Editor edit = pref.edit();
 
-				Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
 				String str = (String)hubSpinner.getSelectedItem();
 
 				if (pref.contains("Range"))
@@ -408,7 +396,17 @@ public class NumbersActivity extends TabActivity {
 				edit.putString("Range", Integer.parseInt(str) + "");
 				edit.commit();
 
-				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();
+				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();	
+				
+				game.setRange(Integer.parseInt(str));
+
+				TextView label = (TextView) findViewById(R.id.label);
+				label.setText("Please enter a number between 1 & " + game.getRange() + ".");
+
+				// Reenable the other UI elements
+				answer.setEnabled(true);
+				submit.setEnabled(true);
+				restart(game.getRange());	
 			}
 		});
 		
