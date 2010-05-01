@@ -44,7 +44,7 @@ public class NumbersActivity extends TabActivity {
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
-	private int currentTab;
+	private static int currentTab = -1;
 
 	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
@@ -56,15 +56,12 @@ public class NumbersActivity extends TabActivity {
 	private TextView hiLow;
 	private TextView numGuesses;
 
-	private boolean firstTimeIn = true;
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbed);
 
-		if (firstTimeIn) {
 			//Display the logo
 			final Dialog prompt = new Dialog(this);
 			prompt.setTitle("Welcome to Numbers!");
@@ -93,11 +90,9 @@ public class NumbersActivity extends TabActivity {
 				}
 			}.start();
 			prompt.show();
-			firstTimeIn = false;
-		}
 
 		//Set up tabs
-		createTabs();
+		createTabs(currentTab);
 
 		//Get the preference file (to get the user specified range)
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
@@ -107,15 +102,6 @@ public class NumbersActivity extends TabActivity {
 
 		TextView label = (TextView) findViewById(R.id.label);
 		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-
-		// Set the range spinner value to the current range
-		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		int position = adapter.getPosition(String.valueOf(game.getRange()));
-		hubSpinner.setAdapter(adapter);
-		hubSpinner.setSelection(position);
-		hubSpinner.setVisibility(View.INVISIBLE);
 
 		//Set the submit button's action
 		submit = (Button) findViewById(R.id.submit);
@@ -167,13 +153,13 @@ public class NumbersActivity extends TabActivity {
 		super.onConfigurationChanged(newConfig);
 		setContentView(R.layout.tabbed);
 
-		createTabs();
+		createTabs(currentTab);
 	}
 	
 	/**
 	 * Set up the tabbed view
 	 */
-	private void createTabs()
+	private void createTabs(int currentTab)
 	{
 		//Set up the tab view
 		mTabHost = getTabHost();
@@ -204,8 +190,11 @@ public class NumbersActivity extends TabActivity {
 		//Hide the keyboard until the user presses on the text box
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-		mTabHost.setCurrentTab(GAME_VIEW_TAB);
-		currentTab = 0;
+//		if (currentTab == -1)
+//			currentTab = GAME_VIEW_TAB;
+		
+		mTabHost.setCurrentTab(currentTab);
+		currentTab = mTabHost.getCurrentTab();
 	}
 
 	/**
@@ -337,12 +326,14 @@ public class NumbersActivity extends TabActivity {
 		if (!menuOption)
 		{
 			mTabHost.setCurrentTab(GAME_VIEW_TAB);
+			currentTab = GAME_VIEW_TAB;
 			restart(game.getRange());
 			menuOption = true;
 		}
 		else if (menuOption)
 		{
 			mTabHost.setCurrentTab(HS_VIEW_TAB);
+			currentTab = HS_VIEW_TAB;
 			menuOption = false;
 		}
 	}
@@ -356,10 +347,14 @@ public class NumbersActivity extends TabActivity {
 	{
 		//Get the screen dimensions so we can set the buttons to fill half the screen
 		DisplayMetrics dm = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+		final Dialog dlg = new Dialog(this);
+		dlg.setContentView(R.layout.rangelayout);
+		dlg.getWindow().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		dlg.setTitle("Please Select a Range");
 
 		// Get the spinner
-		Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
+		Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
 		// Get the options from the limits.xml file
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -368,45 +363,36 @@ public class NumbersActivity extends TabActivity {
 		hubSpinner.setAdapter(adapter);
 		// Set the current selected option
 		hubSpinner.setSelection(pos);
-		hubSpinner.setVisibility(View.VISIBLE);
+		hubSpinner.setPadding(2, 0, 2, 0);
 
 		// Disable the other fields
 		submit.setEnabled(false);
 		answer.setEnabled(false);
 
-		Button submit1 = (Button) findViewById(R.id.spinnerButton);
-		submit1.setWidth((dm.widthPixels - 3) / 2);
-		submit1.setVisibility(View.VISIBLE);
-
+		Button submit1 = (Button) dlg.findViewById(R.id.spinnerButton);
+		submit1.setWidth((dm.widthPixels - 20) / 2);
+		submit1.setPadding(2, 0, 2, 0);
 		submit1.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
-				Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
+				Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
 				String str = (String)hubSpinner.getSelectedItem();
 				game.setRange(Integer.parseInt(str));
 
 				TextView label = (TextView) findViewById(R.id.label);
 				label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-				hubSpinner.setVisibility(View.INVISIBLE);
-				Button submit1 = (Button) findViewById(R.id.spinnerButton);
-				submit1.setVisibility(View.INVISIBLE);
-
-				Button setAsDefault = (Button) findViewById(R.id.setDefault);
-				setAsDefault.setVisibility(View.INVISIBLE);
 
 				// Reenable the other UI elements
 				answer.setEnabled(true);
 				submit.setEnabled(true);
-
+				dlg.dismiss();
 				restart(game.getRange());
 			}
 		});
-
-		Button setAsDefault = (Button) findViewById(R.id.setDefault);
-		setAsDefault.setWidth((dm.widthPixels - 3) / 2);
-		setAsDefault.setVisibility(View.VISIBLE);
-
+		
+		Button setAsDefault = (Button) dlg.findViewById(R.id.setDefault);
+		setAsDefault.setWidth((dm.widthPixels - 20) / 2);
+		setAsDefault.setPadding(2, 0, 2, 0);
 		setAsDefault.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -415,7 +401,7 @@ public class NumbersActivity extends TabActivity {
 
 				Editor edit = pref.edit();
 
-				Spinner hubSpinner = (Spinner) findViewById(R.id.numSpinner);
+				Spinner hubSpinner = (Spinner) dlg.findViewById(R.id.numSpinner);
 				String str = (String)hubSpinner.getSelectedItem();
 
 				if (pref.contains("Range"))
@@ -425,7 +411,10 @@ public class NumbersActivity extends TabActivity {
 				edit.commit();
 
 				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();
-			}});
+			}
+		});
+		
+		dlg.show();
 	}
 
 	/**
