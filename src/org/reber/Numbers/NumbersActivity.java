@@ -59,34 +59,34 @@ public class NumbersActivity extends TabActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tabbed);
 
-			//Display the logo
-			final Dialog prompt = new Dialog(this);
-			prompt.setTitle("Welcome to Numbers!");
-			ImageView im = new ImageView(this);
-			im.setImageDrawable(getResources().getDrawable(R.drawable.icon));		
-			prompt.setContentView(im);	
+		//Display the logo
+		final Dialog prompt = new Dialog(this);
+		prompt.setTitle("Welcome to Numbers!");
+		ImageView im = new ImageView(this);
+		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));               
+		prompt.setContentView(im);      
 
-			//The Handler allows us to send events from the two threads
-			final Handler handler = new Handler();
-			//Create a thread to wait for a few seconds, then we can dismiss the prompt
-			new Thread() {
-				@Override
-				public void run() {
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							prompt.dismiss();
-						}
-					});
+		//The Handler allows us to send events from the two threads
+		final Handler handler = new Handler();
+		//Create a thread to wait for a few seconds, then we can dismiss the prompt
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
 				}
-			}.start();
-			prompt.show();
+
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						prompt.dismiss();
+					}
+				});
+			}
+		}.start();
+		prompt.show();
 
 		//Set up tabs
 		createTabs();
@@ -118,7 +118,7 @@ public class NumbersActivity extends TabActivity {
 			//We want to catch the Enter key and override the default action
 			//Overriding action is to simulate pressing "Submit"
 			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {				
+			public boolean onKey(View v, int keyCode, KeyEvent event) {                             
 				if (keyCode == KeyEvent.KEYCODE_ENTER) {
 					submit.performClick();
 					//This method gets called twice, so we keep track
@@ -133,14 +133,14 @@ public class NumbersActivity extends TabActivity {
 				} else {
 					return true;
 				}
-			}			
+			}                       
 		});
 
 		initScoresList();
 
 		highScores();
 	}
-	
+
 	/**
 	 * Set up the tabbed view
 	 */
@@ -161,7 +161,7 @@ public class NumbersActivity extends TabActivity {
 				if (tabId.equals("hsTab"))
 					menuOption = false;
 				else menuOption = true;
-				
+
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
 			}
@@ -169,7 +169,7 @@ public class NumbersActivity extends TabActivity {
 
 		//Hide the keyboard until the user presses on the text box
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		
+
 		mTabHost.setCurrentTab(GAME_VIEW_TAB);
 	}
 
@@ -253,7 +253,7 @@ public class NumbersActivity extends TabActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					initScores();
-					printHighScores();				
+					printHighScores();                              
 				}
 			});
 
@@ -321,7 +321,7 @@ public class NumbersActivity extends TabActivity {
 	{
 		final AlertDialog.Builder dlg = new AlertDialog.Builder(this);
 		dlg.setTitle("Please Select a Range");
-		
+
 		// Create the spinner
 		final Spinner hubSpinner = new Spinner(this);
 		// Get the options from the limits.xml file
@@ -332,13 +332,13 @@ public class NumbersActivity extends TabActivity {
 		hubSpinner.setAdapter(adapter);
 		// Set the current selected option
 		hubSpinner.setSelection(pos);
-		
+
 		dlg.setView(hubSpinner);
-		
+
 		// Disable the other fields
 		submit.setEnabled(false);
 		answer.setEnabled(false);
-		
+
 		dlg.setPositiveButton("Choose", new OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -351,12 +351,12 @@ public class NumbersActivity extends TabActivity {
 				// Reenable the other UI elements
 				answer.setEnabled(true);
 				submit.setEnabled(true);
-				restart(game.getRange());				
+				restart(game.getRange());                               
 			}
 		});
 
 		dlg.setNeutralButton("Set Default", new OnClickListener() {
-			
+
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
@@ -371,8 +371,8 @@ public class NumbersActivity extends TabActivity {
 				edit.putString("Range", Integer.parseInt(str) + "");
 				edit.commit();
 
-				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show();	
-				
+				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show(); 
+
 				game.setRange(Integer.parseInt(str));
 
 				TextView label = (TextView) findViewById(R.id.label);
@@ -381,10 +381,10 @@ public class NumbersActivity extends TabActivity {
 				// Reenable the other UI elements
 				answer.setEnabled(true);
 				submit.setEnabled(true);
-				restart(game.getRange());	
+				restart(game.getRange());       
 			}
 		});
-		
+
 		dlg.show();
 	}
 
@@ -474,7 +474,7 @@ public class NumbersActivity extends TabActivity {
 		//and the game is over, we will add it
 		if (!added && scores.size() < 10 && game.getFinished())
 		{
-			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses()));			
+			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses()));                     
 			promptForName(scores.get(scores.size()-1));
 		}
 	}
@@ -604,7 +604,7 @@ public class NumbersActivity extends TabActivity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						initScores();
-					}				
+					}                               
 				});
 				alert.show();
 			}
