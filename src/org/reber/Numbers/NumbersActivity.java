@@ -8,6 +8,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -352,6 +353,15 @@ public class NumbersActivity extends TabActivity {
 				answer.setEnabled(true);
 				submit.setEnabled(true);
 				restart(game.getRange());                               
+			}
+		});
+		
+		//Reenable UI Items if the user clicks the back button
+		dlg.setOnCancelListener(new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				answer.setEnabled(true);
+				submit.setEnabled(true);				
 			}
 		});
 
