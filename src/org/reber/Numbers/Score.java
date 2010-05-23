@@ -46,6 +46,26 @@ public class Score {
 	{
 		return score;
 	}
+	
+	/**
+	 * Gets the range for comparison
+	 * 
+	 * @return The range of this object
+	 */
+	public int getRange()
+	{
+		return range;
+	}
+	
+	/**
+	 * Gets the name of the person for this Score object
+	 * 
+	 * @return The name of this object
+	 */
+	public String getName()
+	{
+		return name;
+	}
 
 	/**
 	 * Sets the name for the current score

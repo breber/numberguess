@@ -1,6 +1,17 @@
 package org.reber.Numbers;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -355,7 +366,7 @@ public class NumbersActivity extends TabActivity {
 				restart(game.getRange());                               
 			}
 		});
-		
+
 		//Reenable UI Items if the user clicks the back button
 		dlg.setOnCancelListener(new OnCancelListener() {
 			@Override
@@ -507,7 +518,7 @@ public class NumbersActivity extends TabActivity {
 		input.setHint("Name");
 		prompt.setView(input);
 
-		prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
+		prompt.setPositiveButton("Submit to Online List", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -516,6 +527,46 @@ public class NumbersActivity extends TabActivity {
 					promptForName(s);
 				else {
 					s.setName(input.getText().toString());
+
+					new Thread(new Runnable() {
+						public void run() {
+							try {
+								HttpClient httpclient = new DefaultHttpClient();  
+								HttpPost httppost = new HttpPost("http://numbersguess.appspot.com/numberguess");
+
+								List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();  
+								nameValuePairs.add(new BasicNameValuePair("range", ""+s.getRange()));
+								nameValuePairs.add(new BasicNameValuePair("score", ""+s.getScore()));
+								nameValuePairs.add(new BasicNameValuePair("name", s.getName()));
+
+								httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+								httpclient.execute(httppost);  
+								
+							} catch (UnsupportedEncodingException e) {
+								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+							} catch (ClientProtocolException e) {
+								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+							} catch (IOException e) {
+								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+							}		
+						}
+					});
+
+					updateHighScoresPrefFile();
+				}
+			}
+		});
+		
+		prompt.setNegativeButton("Save to Device", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				//If they don't enter anything, reprompt until they do
+				if (input.getText().toString().equals(""))
+					promptForName(s);
+				else {
+					s.setName(input.getText().toString());
+	
 					updateHighScoresPrefFile();
 				}
 			}
