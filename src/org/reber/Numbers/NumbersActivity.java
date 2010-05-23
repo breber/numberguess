@@ -517,8 +517,8 @@ public class NumbersActivity extends TabActivity {
 		input.setLines(1);
 		input.setHint("Name");
 		prompt.setView(input);
-
-		prompt.setPositiveButton("Submit to Online List", new DialogInterface.OnClickListener() {
+//"Submit to Online List"
+		prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -543,34 +543,34 @@ public class NumbersActivity extends TabActivity {
 								httpclient.execute(httppost);  
 								
 							} catch (UnsupportedEncodingException e) {
-								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 							} catch (ClientProtocolException e) {
-								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 							} catch (IOException e) {
-								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 							}		
 						}
-					});
+					}).start();
 
 					updateHighScoresPrefFile();
 				}
 			}
 		});
 		
-		prompt.setNegativeButton("Save to Device", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				//If they don't enter anything, reprompt until they do
-				if (input.getText().toString().equals(""))
-					promptForName(s);
-				else {
-					s.setName(input.getText().toString());
-	
-					updateHighScoresPrefFile();
-				}
-			}
-		});
+//		prompt.setNegativeButton("Save to Device", new DialogInterface.OnClickListener() {
+//
+//			@Override
+//			public void onClick(DialogInterface dialog, int which) {
+//				//If they don't enter anything, reprompt until they do
+//				if (input.getText().toString().equals(""))
+//					promptForName(s);
+//				else {
+//					s.setName(input.getText().toString());
+//	
+//					updateHighScoresPrefFile();
+//				}
+//			}
+//		});
 
 		prompt.show();
 	}
