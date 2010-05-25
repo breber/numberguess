@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.reber.Numbers" android:versionCode="1"
-	android:versionName="1.2">
+	package="org.reber.Numbers" android:versionCode="3" android:versionName="1.4">
 	<application android:label="@string/app_name"
 		android:debuggable="false" android:icon="@drawable/icon"
 		android:theme="@android:style/Theme.NoTitleBar">

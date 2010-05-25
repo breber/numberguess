@@ -85,7 +85,7 @@ public class NumbersActivity extends TabActivity {
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -650,26 +650,21 @@ public class NumbersActivity extends TabActivity {
 	{
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
 		int i = 1;
-		if (pref.getString(String.valueOf(i), null) == null) {
+		
+		String currentPref = pref.getString(String.valueOf(i), null);
+		
+		if (currentPref == null) {
 			initScores();
 		}
-		while (!pref.getString(String.valueOf(i), null).equals(""))
+		while (!currentPref.equals(""))
 		{
 			try {
-				scores.add(Score.parseString(pref.getString(String.valueOf(i), null)));
+				scores.add(Score.parseString(pref.getString(String.valueOf(i), "")));
 			} catch (ParsingException e) {
-				AlertDialog.Builder alert = new AlertDialog.Builder(this);
-				alert.setTitle(R.string.error);
-				alert.setMessage(R.string.hs_error);
-				alert.setPositiveButton(R.string.reset_hs, new OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						initScores();
-					}                               
-				});
-				alert.show();
+				Toast.makeText(this, R.string.hs_error, Toast.LENGTH_SHORT).show();
 			}
 			i++;
+			currentPref = pref.getString(String.valueOf(i), "");
 		}
 	}
 
