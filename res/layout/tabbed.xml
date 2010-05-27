@@ -115,6 +115,26 @@
 					</TableRow>
 				</TableLayout>
 			</ScrollView>
+			<ScrollView android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+				<RelativeLayout android:layout_height="wrap_content"
+					android:layout_width="fill_parent" android:id="@+id/settingsTab">
+					<TextView android:clickable="false" android:id="@+id/DefaultNameLabel"
+						android:text="Default Name for High Scores:" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:layout_gravity="top|center_vertical"></TextView>
+					<EditText android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:layout_below="@+id/DefaultNameLabel"
+						android:hint="Name" android:id="@+id/DefaultName" android:lines="1"
+						android:inputType="textPersonName"></EditText>
+					<CheckBox android:layout_height="wrap_content"
+						android:layout_width="wrap_content" android:id="@+id/UseDefaultName"
+						android:text="Use this name as the default" android:layout_below="@+id/DefaultName"></CheckBox>
+					<Button android:layout_width="wrap_content"
+						android:layout_below="@+id/UseDefaultName"
+						android:layout_centerHorizontal="true" android:layout_height="wrap_content"
+						android:id="@+id/SaveSettings" android:text="Save Settings"></Button>
+				</RelativeLayout>
+			</ScrollView>
 		</FrameLayout>
 	</LinearLayout>
 </TabHost>

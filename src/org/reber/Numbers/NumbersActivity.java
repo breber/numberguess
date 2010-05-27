@@ -1,17 +1,6 @@
 package org.reber.Numbers;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,6 +23,7 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -54,6 +44,7 @@ public class NumbersActivity extends TabActivity {
 	private static final int HS_VIEW_TAB = 1;
 	private static final String GAME_VIEW_ID = "gameTab";
 	private static final String HS_VIEW_ID = "hsTab";
+	private static final String SETTINGS_VIEW_ID = "settingsTab";
 
 	//Used for the toggling of the menu labels
 	private boolean menuOption = true;
@@ -147,10 +138,64 @@ public class NumbersActivity extends TabActivity {
 				}
 			}                       
 		});
+		
+		Button saveSettings = (Button) findViewById(R.id.SaveSettings);
+		saveSettings.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setSettings();
+			}
+		});
 
 		initScoresList();
 
 		highScores();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.ActivityGroup#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		getSettings();
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.ActivityGroup#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		setSettings();
+	}
+	
+	private void getSettings()
+	{
+		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
+		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
+		
+		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
+		
+		useDefaultCheckBox.setChecked(pref.getBoolean("useDefaultCheckBox", false));
+		defaultNameBox.setText(pref.getString("defaultName", ""));
+	}
+	
+	private void setSettings()
+	{
+		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
+		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
+		String defaultName = defaultNameBox.getText().toString();
+		
+		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
+		Editor edit = pref.edit();
+
+		edit.putBoolean("useDefaultCheckBox", useDefaultCheckBox.isChecked());
+		edit.putString("defaultName", defaultName);
+		
+		edit.commit();
 	}
 
 	/**
@@ -165,14 +210,16 @@ public class NumbersActivity extends TabActivity {
 				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
 		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
 				getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
+		mTabHost.addTab(mTabHost.newTabSpec(SETTINGS_VIEW_ID).setIndicator("Settings", 
+				getResources().getDrawable(R.drawable.settings)).setContent(R.id.settingsTab));
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener()
 		{
 			public void onTabChanged(String tabId)
 			{
-				if (tabId.equals("hsTab"))
-					menuOption = false;
-				else menuOption = true;
+				if (tabId.equals(GAME_VIEW_ID))
+					menuOption = true;
+				else menuOption = false;
 
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
@@ -279,7 +326,7 @@ public class NumbersActivity extends TabActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			//If we are in the high scores, we will go back to the game
-			if (mTabHost.getCurrentTab() == HS_VIEW_TAB)
+			if (mTabHost.getCurrentTab() != GAME_VIEW_TAB)
 			{
 				goToHighScores();
 				return true;
@@ -483,7 +530,14 @@ public class NumbersActivity extends TabActivity {
 				added = true;
 				scores.add(i, new Score(game.getRange(),game.getNumGuesses()));
 
-				promptForName(scores.get(i));
+				CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
+				EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
+				String defaultName = defaultNameBox.getText().toString();
+				
+				if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals(""))
+					scores.get(i).setName(defaultName);
+				else
+					promptForName(scores.get(i));
 
 				if (scores.size() > 10)
 					scores.remove(10);
@@ -495,8 +549,16 @@ public class NumbersActivity extends TabActivity {
 		//and the game is over, we will add it
 		if (!added && scores.size() < 10 && game.getFinished())
 		{
-			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses()));                     
-			promptForName(scores.get(scores.size()-1));
+			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses())); 
+			
+			CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
+			EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
+			String defaultName = defaultNameBox.getText().toString();
+			
+			if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals(""))
+				scores.get(scores.size()-1).setName(defaultName);
+			else
+				promptForName(scores.get(scores.size()-1));
 		}
 	}
 
@@ -517,9 +579,8 @@ public class NumbersActivity extends TabActivity {
 		input.setLines(1);
 		input.setHint("Name");
 		prompt.setView(input);
-//"Submit to Online List"
+		
 		prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//If they don't enter anything, reprompt until they do
@@ -528,49 +589,10 @@ public class NumbersActivity extends TabActivity {
 				else {
 					s.setName(input.getText().toString());
 
-					new Thread(new Runnable() {
-						public void run() {
-							try {
-								HttpClient httpclient = new DefaultHttpClient();  
-								HttpPost httppost = new HttpPost("http://numbersguess.appspot.com/numberguess");
-
-								List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();  
-								nameValuePairs.add(new BasicNameValuePair("range", ""+s.getRange()));
-								nameValuePairs.add(new BasicNameValuePair("score", ""+s.getScore()));
-								nameValuePairs.add(new BasicNameValuePair("name", s.getName()));
-
-								httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-								httpclient.execute(httppost);  
-								
-							} catch (UnsupportedEncodingException e) {
-//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-							} catch (ClientProtocolException e) {
-//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-							} catch (IOException e) {
-//								Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-							}		
-						}
-					}).start();
-
 					updateHighScoresPrefFile();
 				}
 			}
 		});
-		
-//		prompt.setNegativeButton("Save to Device", new DialogInterface.OnClickListener() {
-//
-//			@Override
-//			public void onClick(DialogInterface dialog, int which) {
-//				//If they don't enter anything, reprompt until they do
-//				if (input.getText().toString().equals(""))
-//					promptForName(s);
-//				else {
-//					s.setName(input.getText().toString());
-//	
-//					updateHighScoresPrefFile();
-//				}
-//			}
-//		});
 
 		prompt.show();
 	}
@@ -656,7 +678,7 @@ public class NumbersActivity extends TabActivity {
 		if (currentPref == null) {
 			initScores();
 		}
-		while (!currentPref.equals(""))
+		while (currentPref != null && !currentPref.equals(""))
 		{
 			try {
 				scores.add(Score.parseString(pref.getString(String.valueOf(i), "")));
@@ -665,6 +687,8 @@ public class NumbersActivity extends TabActivity {
 			}
 			i++;
 			currentPref = pref.getString(String.valueOf(i), "");
+			if (currentPref == null)
+				currentPref = "";
 		}
 	}
 
