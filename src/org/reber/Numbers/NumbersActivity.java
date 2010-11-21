@@ -8,8 +8,6 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +16,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnKeyListener;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,9 +26,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TabHost;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.TabHost.OnTabChangeListener;
 
 public class NumbersActivity extends TabActivity {
 
@@ -143,7 +141,7 @@ public class NumbersActivity extends TabActivity {
 		saveSettings.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				setSettings();
+				setSettings(true);
 			}
 		});
 
@@ -169,33 +167,49 @@ public class NumbersActivity extends TabActivity {
 	protected void onPause() {
 		super.onPause();
 		
-		setSettings();
+		setSettings(false);
 	}
 	
 	private void getSettings()
 	{
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
+		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
+		
+		// Get the options from the limits.xml file
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
 		
 		useDefaultCheckBox.setChecked(pref.getBoolean("useDefaultCheckBox", false));
 		defaultNameBox.setText(pref.getString("defaultName", ""));
+		// Get the position of the current range
+		int pos = adapter.getPosition(String.valueOf(pref.getString("Range", "1000")));
+		hubSpinner.setAdapter(adapter);
+		// Set the current selected option
+		hubSpinner.setSelection(pos);
 	}
 	
-	private void setSettings()
+	private void setSettings(boolean presentToast)
 	{
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 		String defaultName = defaultNameBox.getText().toString();
+		Spinner spinner = (Spinner) findViewById(R.id.RangeSpinner);
 		
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
 		Editor edit = pref.edit();
 
 		edit.putBoolean("useDefaultCheckBox", useDefaultCheckBox.isChecked());
 		edit.putString("defaultName", defaultName);
+		edit.putString("Range", Integer.parseInt((String) spinner.getSelectedItem()) + "");
 		
 		edit.commit();
+		
+		if (presentToast) {
+			Toast.makeText(this, "Settings have been saved", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/**
@@ -272,18 +286,6 @@ public class NumbersActivity extends TabActivity {
 		return true;
 	}
 
-	/**
-	 * Gets called right before the menu is popped up.
-	 * Set the title of the menu item (High Scores or Back to Game)
-	 * depending on what tab we are currently on.
-	 */
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.getItem(1).setTitle(menuOption ? "High Scores":"Back to Game");
-
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -292,10 +294,6 @@ public class NumbersActivity extends TabActivity {
 		if (menuTitle.equals("Start Over"))
 		{
 			restart(game.getRange());
-		}
-		if (menuTitle.equals("High Scores") || menuTitle.equals("Back to Game"))
-		{
-			goToHighScores();
 		}
 		if (menuTitle.equals("Range"))
 		{
@@ -378,82 +376,8 @@ public class NumbersActivity extends TabActivity {
 	 */
 	private void setRange()
 	{
-		final AlertDialog.Builder dlg = new AlertDialog.Builder(this);
-		dlg.setTitle("Please Select a Range");
-
-		// Create the spinner
-		final Spinner hubSpinner = new Spinner(this);
-		// Get the options from the limits.xml file
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Get the position of the current range
-		int pos = adapter.getPosition(String.valueOf(game.getRange()));
-		hubSpinner.setAdapter(adapter);
-		// Set the current selected option
-		hubSpinner.setSelection(pos);
-
-		dlg.setView(hubSpinner);
-
-		// Disable the other fields
-		submit.setEnabled(false);
-		answer.setEnabled(false);
-
-		dlg.setPositiveButton("Choose", new OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				String str = (String)hubSpinner.getSelectedItem();
-				game.setRange(Integer.parseInt(str));
-
-				TextView label = (TextView) findViewById(R.id.label);
-				label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-
-				// Reenable the other UI elements
-				answer.setEnabled(true);
-				submit.setEnabled(true);
-				restart(game.getRange());                               
-			}
-		});
-
-		//Reenable UI Items if the user clicks the back button
-		dlg.setOnCancelListener(new OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				answer.setEnabled(true);
-				submit.setEnabled(true);				
-			}
-		});
-
-		dlg.setNeutralButton("Set Default", new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
-
-				Editor edit = pref.edit();
-
-				String str = (String)hubSpinner.getSelectedItem();
-
-				if (pref.contains("Range"))
-					edit.remove("Range");
-
-				edit.putString("Range", Integer.parseInt(str) + "");
-				edit.commit();
-
-				Toast.makeText(NumbersActivity.this, str + " has been set as the default.", Toast.LENGTH_SHORT).show(); 
-
-				game.setRange(Integer.parseInt(str));
-
-				TextView label = (TextView) findViewById(R.id.label);
-				label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-
-				// Reenable the other UI elements
-				answer.setEnabled(true);
-				submit.setEnabled(true);
-				restart(game.getRange());       
-			}
-		});
-
-		dlg.show();
+		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
+		game.setRange(Integer.parseInt((String) hubSpinner.getSelectedItem()));
 	}
 
 	/**
@@ -471,7 +395,6 @@ public class NumbersActivity extends TabActivity {
 		try {
 			response = Integer.parseInt(answer.getText().toString());
 			hiLow.setText(game.checkAnswer(response)); 
-
 		} catch (OutOfBoundsException e){
 			Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 			return;
@@ -544,7 +467,7 @@ public class NumbersActivity extends TabActivity {
 				break;
 			}
 		}
-
+		//TODO Figure out if a different data structure would be better
 		// If we didn't add it, and the size of the ArrayList is smaller than 10, 
 		//and the game is over, we will add it
 		if (!added && scores.size() < 10 && game.getFinished())
@@ -624,7 +547,7 @@ public class NumbersActivity extends TabActivity {
 	private void printHighScores()
 	{
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
-
+		// TODO: Use a ListView
 		TextView tv = (TextView) findViewById(R.id.hsText1);
 		tv.setText("1. " + pref.getString("1", null));
 		tv = (TextView) findViewById(R.id.hsText2);

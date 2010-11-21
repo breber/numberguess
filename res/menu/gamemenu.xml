@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/menu1">
-<item android:id="@+id/restart" android:title="Start Over" android:icon="@+drawable/restart"></item>
-<item android:id="@+id/highScores" android:title="High Scores" android:icon="@+drawable/hs"></item>
-<item android:id="@+id/amtNumbers" android:title="Range" android:icon="@+drawable/range"></item>
-<item android:id="@+id/resetHS" android:title="Reset High Scores" android:icon="@+drawable/reseths"></item>
+<item android:id="@+id/restart" android:title="Start Over" android:icon="@drawable/ic_menu_restart"></item>
+<item android:id="@+id/resetHS" android:title="Reset High Scores" android:icon="@drawable/ic_menu_delete"></item>
 </menu>

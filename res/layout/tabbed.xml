@@ -129,8 +129,14 @@
 					<CheckBox android:layout_height="wrap_content"
 						android:layout_width="wrap_content" android:id="@+id/UseDefaultName"
 						android:text="Use this name as the default" android:layout_below="@+id/DefaultName"></CheckBox>
+					<TextView android:clickable="false" android:id="@+id/DefaultRange" android:layout_below="@+id/UseDefaultName"
+						android:text="Default Range:" android:layout_width="fill_parent"
+						android:layout_height="wrap_content" android:layout_gravity="top|center_vertical"></TextView>
+					<Spinner android:layout_height="wrap_content"
+						android:layout_width="fill_parent" android:layout_below="@+id/DefaultRange"
+						android:id="@+id/RangeSpinner"></Spinner>
 					<Button android:layout_width="wrap_content"
-						android:layout_below="@+id/UseDefaultName"
+						android:layout_below="@+id/RangeSpinner"
 						android:layout_centerHorizontal="true" android:layout_height="wrap_content"
 						android:id="@+id/SaveSettings" android:text="Save Settings"></Button>
 				</RelativeLayout>
