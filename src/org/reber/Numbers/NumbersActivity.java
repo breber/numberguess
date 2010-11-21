@@ -217,12 +217,12 @@ public class NumbersActivity extends TabActivity {
 		//Set up the tab view
 		mTabHost = getTabHost();
 
-		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("Game", 
-				getResources().getDrawable(R.drawable.iconsmall)).setContent(R.id.gameViewTab));
-		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("High Scores", 
-				getResources().getDrawable(R.drawable.hs)).setContent(R.id.hsTableTab));
-		mTabHost.addTab(mTabHost.newTabSpec(SETTINGS_VIEW_ID).setIndicator("Settings", 
-				getResources().getDrawable(R.drawable.settings)).setContent(R.id.settingsTab));
+		mTabHost.addTab(mTabHost.newTabSpec(GAME_VIEW_ID).setIndicator("", 
+				getResources().getDrawable(R.drawable.ic_tab_game)).setContent(R.id.gameViewTab));
+		mTabHost.addTab(mTabHost.newTabSpec(HS_VIEW_ID).setIndicator("", 
+				getResources().getDrawable(R.drawable.ic_tab_hs)).setContent(R.id.hsTableTab));
+		mTabHost.addTab(mTabHost.newTabSpec(SETTINGS_VIEW_ID).setIndicator("", 
+				getResources().getDrawable(R.drawable.ic_tab_preferences)).setContent(R.id.settingsTab));
 
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
