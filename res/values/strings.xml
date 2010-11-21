@@ -12,4 +12,5 @@
 <string name="name_prompt">Please enter your name:</string>
 <string name="bad_input">Incorrect Input</string>
 <string name="reset_hs_prompt">Are you sure you want to reset the High Scores?</string>
+<string name="enter_a_number">Please enter a number between 1 &amp;amp; 1000.</string>
 </resources>

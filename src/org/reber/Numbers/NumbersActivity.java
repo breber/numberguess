@@ -1,6 +1,7 @@
 package org.reber.Numbers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -64,7 +65,7 @@ public class NumbersActivity extends TabActivity {
 		final Dialog prompt = new Dialog(this);
 		prompt.setTitle("Welcome to Numbers!");
 		ImageView im = new ImageView(this);
-		im.setImageDrawable(getResources().getDrawable(R.drawable.icon));               
+		im.setImageDrawable(getResources().getDrawable(R.drawable.icon_big));               
 		prompt.setContentView(im);      
 
 		//The Handler allows us to send events from the two threads
@@ -170,8 +171,7 @@ public class NumbersActivity extends TabActivity {
 		setSettings(false);
 	}
 	
-	private void getSettings()
-	{
+	private void getSettings() {
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
@@ -191,8 +191,7 @@ public class NumbersActivity extends TabActivity {
 		hubSpinner.setSelection(pos);
 	}
 	
-	private void setSettings(boolean presentToast)
-	{
+	private void setSettings(boolean presentToast) {
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 		String defaultName = defaultNameBox.getText().toString();
@@ -204,6 +203,7 @@ public class NumbersActivity extends TabActivity {
 		edit.putBoolean("useDefaultCheckBox", useDefaultCheckBox.isChecked());
 		edit.putString("defaultName", defaultName);
 		edit.putString("Range", Integer.parseInt((String) spinner.getSelectedItem()) + "");
+		setRange();
 		
 		edit.commit();
 		
@@ -215,8 +215,7 @@ public class NumbersActivity extends TabActivity {
 	/**
 	 * Set up the tabbed view
 	 */
-	private void createTabs()
-	{
+	private void createTabs() {
 		//Set up the tab view
 		mTabHost = getTabHost();
 
@@ -227,13 +226,13 @@ public class NumbersActivity extends TabActivity {
 		mTabHost.addTab(mTabHost.newTabSpec(SETTINGS_VIEW_ID).setIndicator("Settings", 
 				getResources().getDrawable(R.drawable.settings)).setContent(R.id.settingsTab));
 
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener()
-		{
-			public void onTabChanged(String tabId)
-			{
-				if (tabId.equals(GAME_VIEW_ID))
+		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			public void onTabChanged(String tabId) {
+				if (tabId.equals(GAME_VIEW_ID)) {
 					menuOption = true;
-				else menuOption = false;
+				} else {
+					menuOption = false;
+				}
 
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(mTabHost.getApplicationWindowToken(), 0);
@@ -249,15 +248,13 @@ public class NumbersActivity extends TabActivity {
 	/**
 	 * Restarts the game.  Resets the UI and makes a new random number.
 	 */
-	private void restart(int range)
-	{
+	private void restart(int range) {
 		//Create a new numbers game
 		game = new NumbersGame(range);
 
 		//Reset the submit button (because it is changed to a restart button once the user wins)
 		submit.setText("Submit");
 		submit.setOnClickListener(new View.OnClickListener() {
-
 			@Override
 			public void onClick(View arg0) {
 				checkAnswer();
@@ -279,7 +276,6 @@ public class NumbersActivity extends TabActivity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.gamemenu, menu);
 
@@ -288,19 +284,11 @@ public class NumbersActivity extends TabActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		String menuTitle = item.getTitle().toString();
 
-		if (menuTitle.equals("Start Over"))
-		{
+		if (menuTitle.equals("Start Over"))	{
 			restart(game.getRange());
-		}
-		if (menuTitle.equals("Range"))
-		{
-			setRange();
-		}
-		if (menuTitle.equals("Reset High Scores"))
-		{
+		} else if (menuTitle.equals("Reset High Scores")) {
 			//do we really want to clear high scores?
 			AlertDialog.Builder prompt = new AlertDialog.Builder(this);
 
@@ -310,7 +298,7 @@ public class NumbersActivity extends TabActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					initScores();
-					printHighScores();                              
+					printHighScores(new ArrayList<Score>());//TODO                              
 				}
 			});
 
@@ -324,8 +312,7 @@ public class NumbersActivity extends TabActivity {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			//If we are in the high scores, we will go back to the game
-			if (mTabHost.getCurrentTab() != GAME_VIEW_TAB)
-			{
+			if (mTabHost.getCurrentTab() != GAME_VIEW_TAB) {
 				goToHighScores();
 				return true;
 			} else if (mTabHost.getCurrentTab() == GAME_VIEW_TAB) {
@@ -354,16 +341,12 @@ public class NumbersActivity extends TabActivity {
 	 * Switches the view to high scores, and changes the title of the menu
 	 * item to correspond to the view we are on.
 	 */
-	private void goToHighScores()
-	{
-		if (!menuOption)
-		{
+	private void goToHighScores() {
+		if (!menuOption) {
 			mTabHost.setCurrentTab(GAME_VIEW_TAB);
 			restart(game.getRange());
 			menuOption = true;
-		}
-		else if (menuOption)
-		{
+		} else if (menuOption) {
 			mTabHost.setCurrentTab(HS_VIEW_TAB);
 			menuOption = false;
 		}
@@ -374,27 +357,29 @@ public class NumbersActivity extends TabActivity {
 	 * Default is 1000.
 	 * Allows anything in the <code>Spinner</code>
 	 */
-	private void setRange()
-	{
+	private void setRange()	{
 		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
-		game.setRange(Integer.parseInt((String) hubSpinner.getSelectedItem()));
+		game = new NumbersGame(Integer.parseInt((String) hubSpinner.getSelectedItem()));
+		
+		TextView label = (TextView) findViewById(R.id.label);
+		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
 	}
 
 	/**
 	 * Checks to see if the answer the user entered is correct
 	 */
-	private void checkAnswer()
-	{
+	private void checkAnswer() {
 		//When the user presses the "Done"/"Next" button to check, it gets
 		//called twice...
-		if (keyPressCount >= 1)
+		if (keyPressCount >= 1) {
 			return;
+		}
 
 		int response;
 
 		try {
 			response = Integer.parseInt(answer.getText().toString());
-			hiLow.setText(game.checkAnswer(response)); 
+			hiLow.setText(game.checkAnswer(response));
 		} catch (OutOfBoundsException e){
 			Toast.makeText(NumbersActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 			return;
@@ -407,16 +392,14 @@ public class NumbersActivity extends TabActivity {
 
 		numGuesses.setText("You have guessed " + game.getNumGuesses() + " times.");
 
-		if (hiLow.getText().toString().contains("Correct,")) 
-		{
+		if (hiLow.getText().toString().contains("Correct,")) {
 			submit.setText("Restart");
 			submit.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
 					//Again, we have the problem of being called twice...
-					if (keyPressCount >= 1)
-					{
+					if (keyPressCount >= 1)	{
 						keyPressCount = -1;
 						return;
 					}
@@ -430,26 +413,25 @@ public class NumbersActivity extends TabActivity {
 	/**
 	 * Checks to see if it is a high score and updates the UI
 	 */
-	private void highScores()
-	{
+	private void highScores() {
 		checkHighScores();
 		updateHighScoresPrefFile();
-		printHighScores();
+		printHighScores(new ArrayList<Score>()); //TODO
 	}
 
 	/**
 	 * Checks the high scores and adds them to the <code>ArrayList</code> of
 	 * <code>Score</code>s
 	 */
-	private void checkHighScores()
-	{
+	private void checkHighScores() {
 		boolean added = false;
-		if (!game.getFinished()) return;
+		if (!game.getFinished()) {
+			return;
+		}
+		
 		//Loop through and add the score in the correct spot
-		for (int i = 0; i < scores.size(); i++)
-		{
-			if (game.getNumGuesses() < scores.get(i).getScore())
-			{
+		for (int i = 0; i < scores.size(); i++)	{
+			if (game.getNumGuesses() < scores.get(i).getScore()) {
 				added = true;
 				scores.add(i, new Score(game.getRange(),game.getNumGuesses()));
 
@@ -457,31 +439,33 @@ public class NumbersActivity extends TabActivity {
 				EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 				String defaultName = defaultNameBox.getText().toString();
 				
-				if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals(""))
+				if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals("")) {
 					scores.get(i).setName(defaultName);
-				else
+				} else {
 					promptForName(scores.get(i));
-
-				if (scores.size() > 10)
+				}
+				
+				if (scores.size() > 10) {
 					scores.remove(10);
+				}
 				break;
 			}
 		}
 		//TODO Figure out if a different data structure would be better
 		// If we didn't add it, and the size of the ArrayList is smaller than 10, 
 		//and the game is over, we will add it
-		if (!added && scores.size() < 10 && game.getFinished())
-		{
+		if (!added && scores.size() < 10 && game.getFinished())	{
 			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses())); 
 			
 			CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 			EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 			String defaultName = defaultNameBox.getText().toString();
 			
-			if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals(""))
+			if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals("")) {
 				scores.get(scores.size()-1).setName(defaultName);
-			else
+			} else {
 				promptForName(scores.get(scores.size()-1));
+			}
 		}
 	}
 
@@ -491,8 +475,7 @@ public class NumbersActivity extends TabActivity {
 	 * @param s
 	 * The <code>Score</code> the user's name will correspond to.
 	 */
-	private void promptForName(final Score s)
-	{
+	private void promptForName(final Score s) {
 		AlertDialog.Builder prompt = new AlertDialog.Builder(this);
 
 		prompt.setTitle(R.string.high_score);
@@ -507,9 +490,9 @@ public class NumbersActivity extends TabActivity {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				//If they don't enter anything, reprompt until they do
-				if (input.getText().toString().equals(""))
+				if (input.getText().toString().equals("")) {
 					promptForName(s);
-				else {
+				} else {
 					s.setName(input.getText().toString());
 
 					updateHighScoresPrefFile();
@@ -523,29 +506,27 @@ public class NumbersActivity extends TabActivity {
 	/**
 	 * Calculates the high scores and puts them into the Preference List 
 	 */
-	private void updateHighScoresPrefFile()
-	{
+	private void updateHighScoresPrefFile() {
 		SharedPreferences prefStr = getSharedPreferences("Scores", MODE_WORLD_WRITEABLE);
 		Editor edit = prefStr.edit();
 
-		if (!prefStr.contains("1"))
+		if (!prefStr.contains("1")) {
 			initScores();
-
-		for (int i = 0; i < scores.size(); i++)
-		{
+		}
+		
+		for (int i = 0; i < scores.size(); i++)	{
 			edit.putString(String.valueOf(i+1), scores.get(i).toString());
 		}
 
 		edit.commit();
 
-		printHighScores();
+		printHighScores(new ArrayList<Score>()); //TODO
 	}
 
 	/**
 	 * Prints the high score grid.
 	 */
-	private void printHighScores()
-	{
+	private void printHighScores(List<Score> scores) {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
 		// TODO: Use a ListView
 		TextView tv = (TextView) findViewById(R.id.hsText1);
@@ -573,14 +554,11 @@ public class NumbersActivity extends TabActivity {
 	/**
 	 * Initializes the high score preference file.
 	 */
-	private void initScores()
-	{
+	private void initScores() {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_WRITEABLE);
-
 		Editor edit = pref.edit();
 
-		for (int i = 1; i < 11; i++)
-		{
+		for (int i = 1; i < 11; i++) {
 			edit.remove(String.valueOf(i));
 			edit.putString(String.valueOf(i), "");
 			edit.commit();
@@ -591,8 +569,7 @@ public class NumbersActivity extends TabActivity {
 	 * Add the <code>Score</code>s to the <code>ArrayList</code> so that
 	 * we can keep track of the scores that are stored in between sessions.
 	 */
-	private void initScoresList()
-	{
+	private void initScoresList() {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
 		int i = 1;
 		
@@ -601,18 +578,19 @@ public class NumbersActivity extends TabActivity {
 		if (currentPref == null) {
 			initScores();
 		}
-		while (currentPref != null && !currentPref.equals(""))
-		{
+		while (currentPref != null && !currentPref.equals("")) {
 			try {
 				scores.add(Score.parseString(pref.getString(String.valueOf(i), "")));
 			} catch (ParsingException e) {
 				Toast.makeText(this, R.string.hs_error, Toast.LENGTH_SHORT).show();
 			}
+			
 			i++;
 			currentPref = pref.getString(String.valueOf(i), "");
-			if (currentPref == null)
+			
+			if (currentPref == null) {
 				currentPref = "";
+			}
 		}
 	}
-
 }

@@ -10,13 +10,11 @@ package org.reber.Numbers;
 @SuppressWarnings("serial")
 public class OutOfBoundsException extends Exception {
 
-	public OutOfBoundsException()
-	{
+	public OutOfBoundsException() {
 		super();
 	}
 	
-	public OutOfBoundsException(String s)
-	{
+	public OutOfBoundsException(String s) {
 		super(s);
 	}
 }

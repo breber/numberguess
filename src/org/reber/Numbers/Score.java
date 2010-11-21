@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 
  * @author brianreber
  */
-public class Score {
+public class Score implements Comparable<Integer>{
 
 	private int range;
 	private int score;
@@ -42,8 +42,7 @@ public class Score {
 	 * 
 	 * @return The score of this object
 	 */
-	public int getScore()
-	{
+	public int getScore() {
 		return score;
 	}
 	
@@ -52,8 +51,7 @@ public class Score {
 	 * 
 	 * @return The range of this object
 	 */
-	public int getRange()
-	{
+	public int getRange() {
 		return range;
 	}
 	
@@ -62,8 +60,7 @@ public class Score {
 	 * 
 	 * @return The name of this object
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
 
@@ -72,16 +69,16 @@ public class Score {
 	 * 
 	 * @param name Name to set the name to
 	 */
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		if (!name.equals(""))
+		if (!name.equals("")) {
 			return name + " - " + score + " (" + range + ")";
-
+		}
+		
 		return score + " (" + range + ")";
 	}
 
@@ -94,8 +91,7 @@ public class Score {
 	 * @return
 	 * A new <code>Score</code> object representing the given <code>String</code>
 	 */
-	public static Score parseString(String s) throws ParsingException
-	{
+	public static Score parseString(String s) throws ParsingException {
 		Scanner scan = new Scanner(s);
 		String _name = "";
 		int _score = 0;
@@ -132,6 +128,11 @@ public class Score {
 		}
 		
 		return new Score(_range, _score, _name);
+	}
+
+	@Override
+	public int compareTo(Integer another) {
+		return ((Integer) score).compareTo(another);
 	}
 
 }

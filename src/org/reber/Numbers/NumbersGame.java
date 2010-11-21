@@ -13,8 +13,7 @@ public class NumbersGame {
 	/**
 	 * Create a new Numbers game with default values.
 	 */
-	public NumbersGame()
-	{
+	public NumbersGame() {
 		this(1000);
 	}
 	
@@ -24,8 +23,7 @@ public class NumbersGame {
 	 * @param range
 	 * The range of the new Numbers game
 	 */
-	public NumbersGame(int range)
-	{
+	public NumbersGame(int range) {
 		rand = new Random();
 		NumbersGame.range = range;
 		numGuesses = 0;
@@ -39,8 +37,7 @@ public class NumbersGame {
 	 * @return
 	 * The current range of the game.
 	 */
-	public int getRange()
-	{
+	public int getRange() {
 		return range;
 	}
 	
@@ -51,8 +48,7 @@ public class NumbersGame {
 	 * @param range
 	 * New range for the game.
 	 */
-	public void setRange(int range)
-	{
+	public void setRange(int range) {
 		NumbersGame.range = range;
 	}
 	
@@ -62,8 +58,7 @@ public class NumbersGame {
 	 * @return
 	 * Number of guesses used
 	 */
-	public int getNumGuesses()
-	{
+	public int getNumGuesses() {
 		return numGuesses;
 	}
 	
@@ -73,8 +68,7 @@ public class NumbersGame {
 	 * @return
 	 * Whether the current game has finished
 	 */
-	public boolean getFinished()
-	{
+	public boolean getFinished() {
 		return finished;
 	}
 	
@@ -90,8 +84,7 @@ public class NumbersGame {
 	 * @throws OutOfBoundsException
 	 * If (ans) is not in the range of the game.
 	 */
-	public String checkAnswer(int ans) throws OutOfBoundsException
-	{
+	public String checkAnswer(int ans) throws OutOfBoundsException {
 		if (ans > range || ans < 0) throw new OutOfBoundsException(ans + " is out of range");
 		
 		if (ans > correctAnswer)
@@ -113,5 +106,4 @@ public class NumbersGame {
     	
     	return "";
 	}
-	
 }

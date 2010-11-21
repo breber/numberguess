@@ -9,13 +9,11 @@ package org.reber.Numbers;
 @SuppressWarnings("serial")
 public class ParsingException extends Exception {
 
-	public ParsingException()
-	{
+	public ParsingException() {
 		super();
 	}
 	
-	public ParsingException(String s)
-	{
+	public ParsingException(String s) {
 		super(s);
 	}
 }
