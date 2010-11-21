@@ -30,15 +30,15 @@ public class ScoreList extends ArrayList<Score> {
 	private int getLocationToAdd(Score score) {
 		// If we are at the max size and the given score is greater than the last score in the 
 		// list, we can't add it
-		if (size() == MAX_SIZE && score.compareTo(get(size())) > 0) {
+		if (size() == MAX_SIZE && score.compareTo(get(size() - 1)) > 0) {
 			return -1;
 		} else {
 			if (size() == 0 || score.compareTo(get(0)) < 0) {
 				return 0;
 			}
 			for (int i = 0; i < size(); i++) {
-				if (score.compareTo(get(i)) > 0) {
-					return i + 1;
+				if (score.compareTo(get(i)) < 0) {
+					return i;
 				}
 			}
 			if (size() != MAX_SIZE) {
