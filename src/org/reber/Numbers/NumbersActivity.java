@@ -1,7 +1,5 @@
 package org.reber.Numbers;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TabActivity;
@@ -34,7 +32,7 @@ import android.widget.Toast;
 public class NumbersActivity extends TabActivity {
 
 	private NumbersGame game;
-	private ArrayList<Score> scores = new ArrayList<Score>();
+	private ScoreList scores = new ScoreList();
 
 	private int keyPressCount = 0;
 
@@ -424,47 +422,21 @@ public class NumbersActivity extends TabActivity {
 	 * <code>Score</code>s
 	 */
 	private void checkHighScores() {
-		boolean added = false;
 		if (!game.getFinished()) {
 			return;
 		}
 		
-		//Loop through and add the score in the correct spot
-		for (int i = 0; i < scores.size(); i++)	{
-			if (game.getNumGuesses() < scores.get(i).getScore()) {
-				added = true;
-				scores.add(i, new Score(game.getRange(),game.getNumGuesses()));
-
-				CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
-				EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
-				String defaultName = defaultNameBox.getText().toString();
-				
-				if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals("")) {
-					scores.get(i).setName(defaultName);
-				} else {
-					promptForName(scores.get(i));
-				}
-				
-				if (scores.size() > 10) {
-					scores.remove(10);
-				}
-				break;
-			}
-		}
-		//TODO Figure out if a different data structure would be better
-		// If we didn't add it, and the size of the ArrayList is smaller than 10, 
-		//and the game is over, we will add it
-		if (!added && scores.size() < 10 && game.getFinished())	{
-			scores.add(scores.size(), new Score(game.getRange(),game.getNumGuesses())); 
+		boolean canAdd = scores.canAdd(new Score(game.getRange(), game.getNumGuesses())); 
 			
+		if (canAdd) {
 			CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 			EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 			String defaultName = defaultNameBox.getText().toString();
 			
 			if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals("")) {
-				scores.get(scores.size()-1).setName(defaultName);
+				scores.add(new Score(game.getRange(), game.getNumGuesses(), defaultName));
 			} else {
-				promptForName(scores.get(scores.size()-1));
+				promptForNameAndAddToScores(new Score(game.getRange(), game.getNumGuesses()));
 			}
 		}
 	}
@@ -475,7 +447,7 @@ public class NumbersActivity extends TabActivity {
 	 * @param s
 	 * The <code>Score</code> the user's name will correspond to.
 	 */
-	private void promptForName(final Score s) {
+	private void promptForNameAndAddToScores(final Score s) {
 		AlertDialog.Builder prompt = new AlertDialog.Builder(this);
 
 		prompt.setTitle(R.string.high_score);
@@ -491,9 +463,9 @@ public class NumbersActivity extends TabActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				//If they don't enter anything, reprompt until they do
 				if (input.getText().toString().equals("")) {
-					promptForName(s);
+					promptForNameAndAddToScores(s);
 				} else {
-					s.setName(input.getText().toString());
+					scores.add(new Score(game.getRange(), game.getNumGuesses(), input.getText().toString()));
 
 					updateHighScoresPrefFile();
 				}
@@ -510,13 +482,11 @@ public class NumbersActivity extends TabActivity {
 		SharedPreferences prefStr = getSharedPreferences("Scores", MODE_WORLD_WRITEABLE);
 		Editor edit = prefStr.edit();
 
-		if (!prefStr.contains("1")) {
+		if (!prefStr.contains("HighScores")) {
 			initScores();
 		}
 		
-		for (int i = 0; i < scores.size(); i++)	{
-			edit.putString(String.valueOf(i+1), scores.get(i).toString());
-		}
+		edit.putString("HighScores", scores.toString());
 
 		edit.commit();
 
@@ -538,11 +508,11 @@ public class NumbersActivity extends TabActivity {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_WRITEABLE);
 		Editor edit = pref.edit();
 
-		for (int i = 1; i < 11; i++) {
-			edit.remove(String.valueOf(i));
-			edit.putString(String.valueOf(i), "");
-			edit.commit();
-		}
+		scores = new ScoreList();
+		
+		edit.remove("HighScores");
+		edit.putString("HighScores", "");
+		edit.commit();
 	}
 
 	/**
@@ -551,25 +521,23 @@ public class NumbersActivity extends TabActivity {
 	 */
 	private void initScoresList() {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
-		int i = 1;
 		
-		String currentPref = pref.getString(String.valueOf(i), null);
+		String currentPref = pref.getString("HighScores", null);
 		
 		if (currentPref == null) {
 			initScores();
+			return;
 		}
-		while (currentPref != null && !currentPref.equals("")) {
+		
+		String[] scoreStrings = currentPref.split(",");
+		
+		for (String current : scoreStrings) {
 			try {
-				scores.add(Score.parseString(pref.getString(String.valueOf(i), "")));
+				if (current.trim().length() != 0) {
+					scores.add(Score.parseString(current));
+				}
 			} catch (ParsingException e) {
 				Toast.makeText(this, R.string.hs_error, Toast.LENGTH_SHORT).show();
-			}
-			
-			i++;
-			currentPref = pref.getString(String.valueOf(i), "");
-			
-			if (currentPref == null) {
-				currentPref = "";
 			}
 		}
 	}

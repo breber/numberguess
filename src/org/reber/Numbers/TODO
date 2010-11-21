@@ -1,4 +1,7 @@
 -Spinner - update HS view based on what the user wants to see
 
--New List type that only allows 10 items
-	-when added, checks size and if it is greater than any current high score
+-Finish work with icons
+	Loading screen
+	Tabs
+
+-Fix font sizes

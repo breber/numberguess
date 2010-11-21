@@ -8,7 +8,7 @@ import java.util.Scanner;
  * 
  * @author brianreber
  */
-public class Score implements Comparable<Integer>{
+public class Score implements Comparable<Score>{
 
 	private int range;
 	private int score;
@@ -131,8 +131,8 @@ public class Score implements Comparable<Integer>{
 	}
 
 	@Override
-	public int compareTo(Integer another) {
-		return ((Integer) score).compareTo(another);
+	public int compareTo(Score another) {
+		return ((Integer) score).compareTo(another.score);
 	}
 
 }
