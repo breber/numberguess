@@ -13,4 +13,8 @@
 <string name="bad_input">Incorrect Input</string>
 <string name="reset_hs_prompt">Are you sure you want to reset the High Scores?</string>
 <string name="enter_a_number">Please enter a number between 1 &amp;amp; 1000.</string>
+<string name="hs_label_top">High Scores!</string>
+<string name="default_name_label">Default Name for High Scores:</string>
+<string name="use_default_name_label">Use this name as the default</string>
+<string name="saved_settings">Save Settings</string>
 </resources>

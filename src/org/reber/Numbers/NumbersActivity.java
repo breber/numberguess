@@ -1,7 +1,6 @@
 package org.reber.Numbers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +24,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -298,7 +298,7 @@ public class NumbersActivity extends TabActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					initScores();
-					printHighScores(new ArrayList<Score>());//TODO                              
+					printHighScores();                             
 				}
 			});
 
@@ -416,7 +416,7 @@ public class NumbersActivity extends TabActivity {
 	private void highScores() {
 		checkHighScores();
 		updateHighScoresPrefFile();
-		printHighScores(new ArrayList<Score>()); //TODO
+		printHighScores();
 	}
 
 	/**
@@ -520,35 +520,15 @@ public class NumbersActivity extends TabActivity {
 
 		edit.commit();
 
-		printHighScores(new ArrayList<Score>()); //TODO
+		printHighScores();
 	}
 
 	/**
 	 * Prints the high score grid.
 	 */
-	private void printHighScores(List<Score> scores) {
-		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
-		// TODO: Use a ListView
-		TextView tv = (TextView) findViewById(R.id.hsText1);
-		tv.setText("1. " + pref.getString("1", null));
-		tv = (TextView) findViewById(R.id.hsText2);
-		tv.setText("2. " + pref.getString("2", null));
-		tv = (TextView) findViewById(R.id.hsText3);
-		tv.setText("3. " + pref.getString("3", null));
-		tv = (TextView) findViewById(R.id.hsText4);
-		tv.setText("4. " + pref.getString("4", null));
-		tv = (TextView) findViewById(R.id.hsText5);
-		tv.setText("5. " + pref.getString("5", null));
-		tv = (TextView) findViewById(R.id.hsText6);
-		tv.setText("6. " + pref.getString("6", null));
-		tv = (TextView) findViewById(R.id.hsText7);
-		tv.setText("7. " + pref.getString("7", null));
-		tv = (TextView) findViewById(R.id.hsText8);
-		tv.setText("8. " + pref.getString("8", null));
-		tv = (TextView) findViewById(R.id.hsText9);
-		tv.setText("9. " + pref.getString("9", null));
-		tv = (TextView) findViewById(R.id.hsText10);
-		tv.setText("10." + pref.getString("10", null));
+	private void printHighScores() {
+		ListView lv = (ListView) findViewById(R.id.hs_list);
+		lv.setAdapter(new ScoreListAdapter(this, android.R.layout.simple_list_item_2, scores));
 	}
 
 	/**
