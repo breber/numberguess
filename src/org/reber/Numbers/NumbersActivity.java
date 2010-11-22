@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -62,8 +63,13 @@ public class NumbersActivity extends TabActivity {
 		//Display the logo
 		final Dialog prompt = new Dialog(this);
 		prompt.setTitle("Welcome to Numbers!");
+		Display display = getWindowManager().getDefaultDisplay(); 
+		int width = display.getWidth();
 		ImageView im = new ImageView(this);
-		im.setImageDrawable(getResources().getDrawable(R.drawable.icon_big));               
+		im.setAdjustViewBounds(true);
+		im.setMaxWidth((int) (.8 * width));
+		im.setImageDrawable(getResources().getDrawable(R.drawable.icon_big));
+		im.setPadding(5, 0, 5, 5);
 		prompt.setContentView(im);      
 
 		//The Handler allows us to send events from the two threads
