@@ -141,7 +141,7 @@ public class NumbersActivity extends TabActivity {
 				}
 			}                       
 		});
-		
+
 		Button saveSettings = (Button) findViewById(R.id.SaveSettings);
 		saveSettings.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -154,38 +154,38 @@ public class NumbersActivity extends TabActivity {
 
 		highScores();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.ActivityGroup#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		getSettings();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see android.app.ActivityGroup#onPause()
 	 */
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		setSettings(false);
 	}
-	
+
 	private void getSettings() {
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
-		
+
 		// Get the options from the limits.xml file
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.limits, android.R.layout.simple_spinner_item); 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		
+
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_READABLE);
-		
+
 		useDefaultCheckBox.setChecked(pref.getBoolean("useDefaultCheckBox", false));
 		defaultNameBox.setText(pref.getString("defaultName", ""));
 		// Get the position of the current range
@@ -194,13 +194,13 @@ public class NumbersActivity extends TabActivity {
 		// Set the current selected option
 		hubSpinner.setSelection(pos);
 	}
-	
+
 	private void setSettings(boolean presentToast) {
 		CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 		EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 		String defaultName = defaultNameBox.getText().toString();
 		Spinner spinner = (Spinner) findViewById(R.id.RangeSpinner);
-		
+
 		SharedPreferences pref = getSharedPreferences("GamePrefs", MODE_WORLD_WRITEABLE);
 		Editor edit = pref.edit();
 
@@ -208,9 +208,9 @@ public class NumbersActivity extends TabActivity {
 		edit.putString("defaultName", defaultName);
 		edit.putString("Range", Integer.parseInt((String) spinner.getSelectedItem()) + "");
 		setRange();
-		
+
 		edit.commit();
-		
+
 		if (presentToast) {
 			Toast.makeText(this, "Settings have been saved", Toast.LENGTH_SHORT).show();
 		}
@@ -326,7 +326,6 @@ public class NumbersActivity extends TabActivity {
 				prompt.setMessage(R.string.close);
 
 				prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
-
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						NumbersActivity.this.finish();
@@ -364,7 +363,7 @@ public class NumbersActivity extends TabActivity {
 	private void setRange()	{
 		Spinner hubSpinner = (Spinner) findViewById(R.id.RangeSpinner);
 		game = new NumbersGame(Integer.parseInt((String) hubSpinner.getSelectedItem()));
-		
+
 		TextView label = (TextView) findViewById(R.id.label);
 		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
 	}
@@ -431,14 +430,14 @@ public class NumbersActivity extends TabActivity {
 		if (!game.getFinished()) {
 			return;
 		}
-		
+
 		boolean canAdd = scores.canAdd(new Score(game.getRange(), game.getNumGuesses())); 
-			
+
 		if (canAdd) {
 			CheckBox useDefaultCheckBox = (CheckBox) findViewById(R.id.UseDefaultName);
 			EditText defaultNameBox = (EditText) findViewById(R.id.DefaultName);
 			String defaultName = defaultNameBox.getText().toString();
-			
+
 			if (useDefaultCheckBox.isChecked() && defaultName != null && !defaultName.equals("")) {
 				scores.add(new Score(game.getRange(), game.getNumGuesses(), defaultName));
 			} else {
@@ -463,7 +462,7 @@ public class NumbersActivity extends TabActivity {
 		input.setLines(1);
 		input.setHint("Name");
 		prompt.setView(input);
-		
+
 		prompt.setPositiveButton(R.string.okay, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -491,7 +490,7 @@ public class NumbersActivity extends TabActivity {
 		if (!prefStr.contains("HighScores")) {
 			initScores();
 		}
-		
+
 		edit.putString("HighScores", scores.toString());
 
 		edit.commit();
@@ -515,7 +514,7 @@ public class NumbersActivity extends TabActivity {
 		Editor edit = pref.edit();
 
 		scores = new ScoreList();
-		
+
 		edit.remove("HighScores");
 		edit.putString("HighScores", "");
 		edit.commit();
@@ -527,16 +526,16 @@ public class NumbersActivity extends TabActivity {
 	 */
 	private void initScoresList() {
 		SharedPreferences pref = getSharedPreferences("Scores", MODE_WORLD_READABLE);
-		
+
 		String currentPref = pref.getString("HighScores", null);
-		
+
 		if (currentPref == null) {
 			initScores();
 			return;
 		}
-		
+
 		String[] scoreStrings = currentPref.split(",");
-		
+
 		for (String current : scoreStrings) {
 			try {
 				if (current.trim().length() != 0) {

@@ -15,20 +15,20 @@
 					android:padding="5dip">
 					<TextView android:layout_height="wrap_content"
 						android:layout_width="fill_parent" android:text="@string/enter_a_number"
-						android:id="@+id/label"></TextView>
+						android:id="@+id/label" android:textSize="16sp"></TextView>
 					<EditText android:layout_height="wrap_content" android:id="@+id/guess"
 						android:maxLines="1" android:lines="1" android:hint="Enter a Number"
 						android:layout_width="fill_parent" android:layout_below="@+id/label"
 						android:inputType="number|phone"></EditText>
 					<Button android:layout_height="wrap_content" android:id="@+id/submit"
 						android:text="Submit" android:layout_width="fill_parent"
-						android:layout_below="@+id/guess"></Button>
-					<TextView android:layout_width="wrap_content"
+						android:layout_below="@+id/guess" android:textSize="16sp"></Button>
+					<TextView android:layout_width="fill_parent"
 						android:layout_height="wrap_content" android:id="@+id/result"
-						android:layout_below="@+id/submit"></TextView>
-					<TextView android:layout_width="wrap_content"
+						android:layout_below="@+id/submit" android:textSize="16sp"></TextView>
+					<TextView android:layout_width="fill_parent"
 						android:layout_height="wrap_content" android:id="@+id/numGuesses"
-						android:layout_below="@+id/result"></TextView>
+						android:layout_below="@+id/result" android:textSize="16sp"></TextView>
 				</RelativeLayout>
 			</ScrollView>
 			<RelativeLayout android:layout_width="fill_parent"
@@ -48,7 +48,8 @@
 					android:padding="5dip">
 					<TextView android:clickable="false" android:id="@+id/DefaultNameLabel"
 						android:text="@string/default_name_label" android:layout_width="fill_parent"
-						android:layout_height="wrap_content" android:layout_gravity="top|center_vertical"></TextView>
+						android:layout_height="wrap_content" android:layout_gravity="top|center_vertical"
+						android:textSize="17sp"></TextView>
 					<EditText android:layout_height="wrap_content"
 						android:layout_width="fill_parent" android:layout_below="@+id/DefaultNameLabel"
 						android:hint="Name" android:id="@+id/DefaultName" android:lines="1"
@@ -56,18 +57,19 @@
 					<CheckBox android:layout_height="wrap_content"
 						android:layout_width="wrap_content" android:id="@+id/UseDefaultName"
 						android:text="@string/use_default_name_label"
-						android:layout_below="@+id/DefaultName"></CheckBox>
+						android:layout_below="@+id/DefaultName" android:textSize="17sp"></CheckBox>
 					<TextView android:clickable="false" android:id="@+id/DefaultRange"
 						android:layout_below="@+id/UseDefaultName" android:text="Default Range:"
 						android:layout_width="fill_parent" android:layout_height="wrap_content"
-						android:layout_gravity="top|center_vertical"></TextView>
+						android:layout_gravity="top|center_vertical" android:textSize="17sp"></TextView>
 					<Spinner android:layout_height="wrap_content"
 						android:layout_width="fill_parent" android:layout_below="@+id/DefaultRange"
-						android:id="@+id/RangeSpinner"></Spinner>
+						android:id="@+id/RangeSpinner" android:textSize="17sp"></Spinner>
 					<Button android:layout_width="wrap_content"
 						android:layout_below="@+id/RangeSpinner"
 						android:layout_centerHorizontal="true" android:layout_height="wrap_content"
-						android:id="@+id/SaveSettings" android:text="@string/saved_settings"></Button>
+						android:id="@+id/SaveSettings" android:text="@string/saved_settings"
+						android:textSize="17sp"></Button>
 				</RelativeLayout>
 			</ScrollView>
 		</FrameLayout>
