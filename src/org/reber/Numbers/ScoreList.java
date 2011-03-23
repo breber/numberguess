@@ -33,7 +33,7 @@ public class ScoreList extends ArrayList<Score> {
 			add(canAdd, object);
 
 			if (size() > MAX_SIZE) {
-				remove(size());
+				remove(size() - 1);
 			}
 			return true;
 		} else {
