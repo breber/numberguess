@@ -8,6 +8,7 @@ If you have any feature suggestions, let me know!  Either go into the issues tab
 
 Scan this QR code to download the app onto your Android Phone.
 ----
+<br />
 [[File:Number-Guess/raw/master/logo.png]]
 [[File:Number-Guess/raw/master/main.png]]
 [[File:Number-Guess/raw/master/prefs.png]]
