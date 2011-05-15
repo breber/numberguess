@@ -4,11 +4,11 @@ I chose to start with a simple game so I could get a handle on the Android OS. O
 
 If you have any feature suggestions, let me know!  Either go into the issues tab here and file a new issue, or email me!
 
-[[File:Number-Guess/WikiImages/raw/master/numbersbarcode.jpg]]
+[[File:Number-Guess/raw/master/WikiImages/numbersbarcode.jpg]]
 
 Scan this QR code to download the app onto your Android Phone.
 ----
 <br />
-[[File:Number-Guess/WikiImages/raw/master/logo.png]]
-[[File:Number-Guess/WikiImages/raw/master/main.png]]
-[[File:Number-Guess/WikiImages/raw/master/prefs.png]]
+[[File:Number-Guess/raw/master/WikiImages/logo.png]]
+[[File:Number-Guess/raw/master/WikiImages/main.png]]
+[[File:Number-Guess/raw/master/WikiImages/prefs.png]]
