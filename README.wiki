@@ -4,10 +4,10 @@ I chose to start with a simple game so I could get a handle on the Android OS. O
 
 If you have any feature suggestions, let me know!  Either go into the issues tab here and file a new issue, or email me!
 
-<img src="numbersbarcode.jpg" />
+[[File:numbersbarcode.jpg]]
 
 Scan this QR code to download the app onto your Android Phone.
-<hr />
-<img src="logo.png" />
-<img src="main.png" />
-<img src="prefs.png" />
+---
+[[File:logo.png]]
+[[File:main.png]]
+[[File:prefs.png]]
