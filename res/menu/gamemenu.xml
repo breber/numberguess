@@ -24,12 +24,14 @@
     </item>
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/ic_tab_preferences"
+        android:icon="@drawable/ic_menu_preferences"
         android:showAsAction="ifRoom|withText"
         android:title="@string/settings">
     </item>
     <item
         android:id="@+id/highScores"
+        android:icon="@drawable/ic_menu_hs"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/high_scores">
     </item>
 

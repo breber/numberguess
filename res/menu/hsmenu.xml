@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/settings"
-        android:icon="@drawable/ic_tab_preferences"
+        android:icon="@drawable/ic_menu_preferences"
         android:showAsAction="ifRoom|withText"
         android:title="@string/settings">
     </item>
