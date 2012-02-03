@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Brian Reber
+ * Copyright (C) 2012 Brian Reber
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
@@ -7,14 +7,15 @@
  * duplicated in all such forms and that any documentation,
  * advertising materials, and other materials related to such
  * distribution and use acknowledge that the software was developed
- * by Brian Reber.  
+ * by Brian Reber.
  * THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 package org.reber.Numbers;
 
-import java.util.Scanner;
+import android.net.Uri;
+import android.provider.BaseColumns;
 
 /**
  * Represents a score for the Numbers game - contains both a score and
@@ -23,6 +24,19 @@ import java.util.Scanner;
  * @author brianreber
  */
 public class Score implements Comparable<Score>{
+
+	public static final class Scores implements BaseColumns {
+		private Scores() {}
+
+		public static final String KEY_RANGE	= "range";
+		public static final String KEY_SCORE	= "score";
+		public static final String KEY_NAME 	= "name";
+
+		public static final Uri CONTENT_URI = Uri.parse("content://" + HSContentProvider.AUTHORITY + "/scores");
+		public static final String TABLE = "scores";
+		public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.reber.score";
+		public static final String DEFAULT_SORT = KEY_SCORE + " desc";
+	}
 
 	private int range;
 	private int score;
@@ -59,7 +73,7 @@ public class Score implements Comparable<Score>{
 	public int getScore() {
 		return score;
 	}
-	
+
 	/**
 	 * Gets the range for comparison
 	 * 
@@ -68,7 +82,7 @@ public class Score implements Comparable<Score>{
 	public int getRange() {
 		return range;
 	}
-	
+
 	/**
 	 * Gets the name of the person for this Score object
 	 * 
@@ -92,61 +106,12 @@ public class Score implements Comparable<Score>{
 		if (!name.equals("")) {
 			return name + " - " + score + " (" + range + ")";
 		}
-		
+
 		return score + " (" + range + ")";
-	}
-
-	/**
-	 * Parses a <code>String</code> and puts the values into a new <code>Score</code>
-	 * object.
-	 * 
-	 * @param s 
-	 * <code>String</code> to parse
-	 * @return
-	 * A new <code>Score</code> object representing the given <code>String</code>
-	 */
-	public static Score parseString(String s) throws ParsingException {
-		Scanner scan = new Scanner(s);
-		String _name = "";
-		int _score = 0;
-		int _range = 0;
-
-		int token = 0;
-		while (scan.hasNext())
-		{
-			switch (token)
-			{
-				case(0): try {
-					_name = scan.next(); 
-					break;
-				} catch (Exception e) {
-					throw new ParsingException("Error parsing name");
-				}
-				case(1): scan.next(); break; // The "-"
-				case(2): try {
-					_score = scan.nextInt(); 
-					break;
-				} catch (Exception e) {
-					throw new ParsingException("Error parsing score");
-				}
-				case(3): try {
-					String temp = scan.next();
-					_range = Integer.parseInt(temp.substring(1,temp.length()-1));
-					break;
-				} catch (Exception e) {
-					throw new ParsingException("Error parsing range");
-				}
-						
-			}
-			token++;
-		}
-		
-		return new Score(_range, _score, _name);
 	}
 
 	@Override
 	public int compareTo(Score another) {
 		return ((Integer) score).compareTo(another.score);
 	}
-
 }

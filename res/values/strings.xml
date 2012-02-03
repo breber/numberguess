@@ -19,7 +19,6 @@
 	<string name="okay">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="error">Error</string>
-	<string name="hs_error">There was an error parsing the high scores.</string>
 	<string name="reset_hs">Reset High Scores</string>
 	<string name="high_score">High Score!</string>
 	<string name="name_prompt">Please enter your name:</string>
