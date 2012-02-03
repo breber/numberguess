@@ -14,7 +14,10 @@
  */
 package org.reber.Numbers;
 
+import org.reber.Numbers.Score.Scores;
+
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,16 +46,7 @@ public class NumbersActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		// Get the preference file (to get the user specified range)
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-
-		// New numbers game
-		game = new NumbersGame(Integer.parseInt(pref.getString(getResources().getString(R.string.limit), "1000")));
-
-		TextView label = (TextView) findViewById(R.id.label);
-		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
-
-		//Set the submit button's action
+		// Set the submit button's action
 		submit = (Button) findViewById(R.id.submit);
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -64,18 +58,39 @@ public class NumbersActivity extends Activity {
 		hiLow = (TextView) findViewById(R.id.result);
 		numGuesses = (TextView) findViewById(R.id.numGuesses);
 		answer = (EditText) findViewById(R.id.guess);
+
+		restart();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (100 == requestCode) {
+			restart();
+		}
+	}
 
 	/**
 	 * Restarts the game.  Resets the UI and makes a new random number.
 	 */
-	private void restart(int range) {
-		//Create a new numbers game
-		game = new NumbersGame(range);
+	private void restart() {
+		// Create a new numbers game
+		// Get the preference file (to get the user specified range)
+		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		game = new NumbersGame(Integer.parseInt(pref.getString(getResources().getString(R.string.limit), "1000")));
+
+		TextView label = (TextView) findViewById(R.id.label);
+		label.setText("Please enter a number between 1 & " + game.getRange() + ".");
 
 		//Reset the submit button (because it is changed to a restart button once the user wins)
-		submit.setText("Submit");
+		submit.setText(getResources().getString(R.string.submit));
 		submit.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -107,8 +122,9 @@ public class NumbersActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.restart: restart(game.getRange()); break;
+		case R.id.restart: restart(); break;
 		case R.id.settings: startActivityForResult(new Intent(this, SettingsActivity.class), 100); break;
+		case R.id.highScores: startActivity(new Intent(this, HSActivity.class)); break;
 		}
 
 		return true;
@@ -135,12 +151,19 @@ public class NumbersActivity extends Activity {
 
 		numGuesses.setText("You have guessed " + game.getNumGuesses() + " times.");
 
-		if (hiLow.getText().toString().contains("Correct,")) {
-			submit.setText("Restart");
+		if (game.getFinished()) {
+			SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+			ContentValues values = new ContentValues();
+			values.put(Scores.KEY_NAME, pref.getString(getResources().getString(R.string.name), "Anonymous"));
+			values.put(Scores.KEY_RANGE, game.getRange());
+			values.put(Scores.KEY_SCORE, game.getNumGuesses());
+			getContentResolver().insert(Scores.CONTENT_URI, values);
+
+			submit.setText(getResources().getString(R.string.restart));
 			submit.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					restart(game.getRange());
+					restart();
 				}
 			});
 		}

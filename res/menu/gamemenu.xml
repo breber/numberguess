@@ -25,7 +25,12 @@
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_tab_preferences"
-        android:title="@string/settings" android:showAsAction="ifRoom|withText">
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settings">
+    </item>
+    <item
+        android:id="@+id/highScores"
+        android:title="@string/high_scores">
     </item>
 
 </menu>

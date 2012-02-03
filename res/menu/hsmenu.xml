@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="utf-8"?>
+<!--
  * Copyright (C) 2012 Brian Reber
  * All rights reserved.
  *
@@ -7,25 +8,19 @@
  * duplicated in all such forms and that any documentation,
  * advertising materials, and other materials related to such
  * distribution and use acknowledge that the software was developed
- * by Brian Reber.
+ * by Brian Reber.  
  * THIS SOFTWARE IS PROVIDED 'AS IS' AND WITHOUT ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- */
-package org.reber.Numbers;
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gameMenu" >
 
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_tab_preferences"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/settings">
+    </item>
 
-/**
- * The settings activity for this application
- * 
- * @author breber
- */
-public class SettingsActivity  extends PreferenceActivity {
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.appsettings);
-	}
-}
+</menu>

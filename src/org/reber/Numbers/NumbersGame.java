@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Brian Reber
+ * Copyright (C) 2012 Brian Reber
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
@@ -99,23 +99,20 @@ public class NumbersGame {
 	 * If (ans) is not in the range of the game.
 	 */
 	public String checkAnswer(int ans) throws IllegalArgumentException {
-		if (ans > range || ans < 0) throw new IllegalArgumentException(ans + " is out of range");
+		if (ans > range || ans < 0) {
+			throw new IllegalArgumentException(ans + " is out of range");
+		}
 
-		if (ans > correctAnswer)
-		{
+		if (ans > correctAnswer) {
 			numGuesses++;
 			return ans + " is too high!";
-		}
-		if (ans < correctAnswer)
-		{
+		} else if (ans < correctAnswer) {
 			numGuesses++;
 			return ans + " is too low!";
-		}
-		if (ans == correctAnswer)
-		{
+		} else if (ans == correctAnswer) {
 			numGuesses++;
 			finished = true;
-			return "Correct, the answer was "+correctAnswer+"!";
+			return "Correct, the answer was " + correctAnswer + "!";
 		}
 
 		return "";

@@ -14,22 +14,43 @@
  */
 package org.reber.Numbers;
 
+import org.reber.Numbers.Score.Scores;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class HSActivity extends Activity {
+	/**
+	 * The Adapter that will hold our Scores in the listview
+	 */
+	private SimpleCursorAdapter adapter;
+
+	/**
+	 * The listview that will be displayed
+	 */
+	private ListView listView;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.hs);
 
-		ListView lv = (ListView) findViewById(R.id.hs_list);
+		listView = (ListView) findViewById(R.id.hs_list);
+
+		Cursor cursor = getContentResolver().query(Scores.CONTENT_URI, null, null,	null, Scores.DEFAULT_SORT);
+
+		adapter = new SimpleCursorAdapter(this, R.layout.rows, cursor,
+				new String[] { Scores.KEY_NAME, Scores.KEY_RANGE, Scores.KEY_SCORE },
+				new int[] {	R.id.userName, R.id.userRange, R.id.userScore });
+		listView.setAdapter(adapter);
 	}
 
 	/**
@@ -43,7 +64,7 @@ public class HSActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.gamemenu, menu);
+		inflater.inflate(R.menu.hsmenu, menu);
 		return true;
 	}
 

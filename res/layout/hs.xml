@@ -24,8 +24,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:text="@string/hs_label_top"
-        android:textSize="20sp" >
+        android:text="@string/high_scores"
+        android:textSize="22sp" >
     </TextView>
 
     <ListView

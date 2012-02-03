@@ -23,6 +23,10 @@
         </activity>
         <activity android:name=".SettingsActivity" />
         <activity android:name=".HSActivity" />
+
+        <provider
+            android:name=".HSContentProvider"
+            android:authorities="org.reber.Numbers.contentprovider" />
     </application>
 
 </manifest>

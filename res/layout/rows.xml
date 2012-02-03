@@ -13,24 +13,35 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="6dip" >
 
     <TextView
-        android:id="@+id/row_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="10dip"
-        android:textSize="16sp" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/userName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" >
+        android:textSize="18sp" >
     </TextView>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userName" >
+
+        <TextView
+            android:id="@+id/userScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/userRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" >
+        </TextView>
+    </RelativeLayout>
+
+</RelativeLayout>

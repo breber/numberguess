@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
- * Copyright (C) 2011 Brian Reber
+ * Copyright (C) 2012 Brian Reber
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
@@ -15,17 +15,8 @@
 -->
 <resources>
 	<string name="app_name">Numbers</string>
-	<string name="spinner">Choose a Max Value</string>
-	<string name="okay">OK</string>
-	<string name="cancel">Cancel</string>
-	<string name="error">Error</string>
-	<string name="reset_hs">Reset High Scores</string>
-	<string name="high_score">High Score!</string>
-	<string name="name_prompt">Please enter your name:</string>
-	<string name="bad_input">Incorrect Input</string>
-	<string name="reset_hs_prompt">Are you sure you want to reset the High Scores?</string>
-	<string name="enter_a_number">Please enter a number between 1 &amp;amp; 1000.</string>
-	<string name="hs_label_top">High Scores!</string>
+	<string name="highScore">High Score!</string>
+	<string name="bad_input">Invalid Input</string>
 	
 	<string name="enterNumber">Enter a Number</string>
 	<string name="submit">Submit</string>
@@ -39,4 +30,5 @@
 	
 	<string name="restart">Restart</string>
 	<string name="settings">Settings</string>
+	<string name="high_scores">High Scores</string>
 </resources>
