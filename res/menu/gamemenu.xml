@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 
- * Copyright (C) 2011 Brian Reber
+<!--
+ * Copyright (C) 2012 Brian Reber
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms are permitted
@@ -14,9 +14,18 @@
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/menu1">
-	<item android:id="@+id/restart" android:title="Start Over"
-		android:icon="@drawable/ic_menu_restart"></item>
-	<item android:id="@+id/resetHS" android:title="Reset High Scores"
-		android:icon="@drawable/ic_menu_delete"></item>
+    android:id="@+id/gameMenu" >
+
+    <item
+        android:id="@+id/restart"
+        android:icon="@drawable/ic_menu_restart"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/restart">
+    </item>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_tab_preferences"
+        android:title="@string/settings" android:showAsAction="ifRoom|withText">
+    </item>
+
 </menu>

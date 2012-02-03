@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <EditTextPreference
+        android:defaultValue="Anonymous"
+        android:key="@string/name"
+        android:title="@string/name" />
+
+    <ListPreference
+        android:defaultValue="1000"
+        android:entries="@array/limits"
+        android:entryValues="@array/limits"
+        android:key="@string/limit"
+        android:title="@string/range" />
+
+</PreferenceScreen>

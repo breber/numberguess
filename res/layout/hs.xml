@@ -13,24 +13,28 @@
  * IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hsTableTab"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="6dip" >
+    android:layout_height="fill_parent"
+    android:padding="5dip" >
 
     <TextView
-        android:id="@+id/row_num"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingRight="10dip"
-        android:textSize="16sp" >
-    </TextView>
-
-    <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/hs_label"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp" >
+        android:clickable="false"
+        android:text="@string/hs_label_top"
+        android:textSize="20sp" >
     </TextView>
 
-</LinearLayout>
+    <ListView
+        android:id="@+id/hs_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/hs_label"
+        android:choiceMode="none"
+        android:clickable="false" >
+    </ListView>
+
+</RelativeLayout>

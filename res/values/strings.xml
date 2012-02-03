@@ -16,7 +16,6 @@
 <resources>
 	<string name="app_name">Numbers</string>
 	<string name="spinner">Choose a Max Value</string>
-	<string name="close">Are you sure you want to close the game?</string>
 	<string name="okay">OK</string>
 	<string name="cancel">Cancel</string>
 	<string name="error">Error</string>
@@ -28,7 +27,17 @@
 	<string name="reset_hs_prompt">Are you sure you want to reset the High Scores?</string>
 	<string name="enter_a_number">Please enter a number between 1 &amp;amp; 1000.</string>
 	<string name="hs_label_top">High Scores!</string>
-	<string name="default_name_label">Default Name for High Scores:</string>
-	<string name="use_default_name_label">Use this name as the default</string>
-	<string name="saved_settings">Save Settings</string>
+	
+	<string name="enterNumber">Enter a Number</string>
+	<string name="submit">Submit</string>
+	
+	<!-- Settings Screen -->
+	<string name="name">Name for high scores</string>
+	<string name="range">Range of Numbers</string>
+	
+	<!-- Preference Keys -->
+	<string name="limit">limit</string>
+	
+	<string name="restart">Restart</string>
+	<string name="settings">Settings</string>
 </resources>
